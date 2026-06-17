@@ -1,0 +1,24 @@
+// controlling the center 
+
+import * as centerService from './center.service.mjs';
+import { successResponse, errorResponse } from '../../shared/utils/apiResponse.mjs';
+
+export const createCenter = async (req, res, next) => {
+    try{
+        const center = await centerService.createCenter(req.body);  
+        return successResponse(res, 201, 'Center created successfully', center);
+    }catch(error){
+        if (error.message === 'Center already exists') {
+            return errorResponse(res, 400, error.message);
+        }
+        next(error);
+    }
+};
+export const getCenter = async (req, res, next ) =>{
+    try{
+        const centers = await centerService.getAllCenters();
+        return successResponse(res, 200, 'Centers fetched successfully', centers);
+    }catch(error){
+        next(error);
+    }
+};
