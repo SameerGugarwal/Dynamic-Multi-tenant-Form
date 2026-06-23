@@ -7,9 +7,74 @@ const router = express.Router();
 
 router.use(protect);
 
-// Only Center Admins (and Super Admins) can manage Organizations
+/**
+ * @swagger
+ * tags:
+ *   name: Organizations
+ *   description: Organization management
+ */
+
+/**
+ * @swagger
+ * /organizations:
+ *   post:
+ *     summary: Create a new organization
+ *     tags: [Organizations]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - contactEmail
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Global Tech Inc"
+ *               contactEmail:
+ *                 type: string
+ *                 example: "contact@globaltech.com"
+ *               centers:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["6a350dcf89a69b19954db96e"]
+ *     responses:
+ *       201:
+ *         description: Organization created successfully
+ */
 router.post('/', authorizeRoles('Center Admin', 'Super Admin'), createNewOrg);
+
+/**
+ * @swagger
+ * /organizations/my-center:
+ *   get:
+ *     summary: Get organizations for a specific center
+ *     tags: [Organizations]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Organizations fetched successfully
+ */
 router.get('/my-center', authorizeRoles('Center Admin'), getOrg, getCenterOrgs);
+
+/**
+ * @swagger
+ * /organizations:
+ *   get:
+ *     summary: Get all organizations
+ *     tags: [Organizations]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: All organizations fetched successfully
+ */
 router.get('/', authorizeRoles('Super Admin'), getAllOrgs);
 
 export default router;

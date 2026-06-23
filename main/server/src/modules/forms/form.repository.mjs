@@ -7,11 +7,11 @@ export const createForm = async (formData) => {
 };
 //Fetch Master Templates
 export const getMasterForms = async (query={})=>{
-    return await Form.find({isMaster: true, ...query}).sort({createdAt: -1});
+    return await Form.find({clonedFromId: null, ...query}).sort({createdAt: -1});
 };
 //Fetch Local Forms
-export const getOrgForms = async (OrganizationID) =>{
-    return await Form.find({OrganizationID}).sort({createdAt: -1});
+export const getOrgForms = async (organizationId) =>{
+    return await Form.find({organizationId}).sort({createdAt: -1});
 };
 // form by specific ID
 export const getFormById = async (formId) => {
@@ -22,8 +22,8 @@ export const createClonedForm = async (formCloneData) => {
     return await Form.create(formCloneData);
 };
 //Deep Clone all associated questions
-export const getQuestionsByFormId = async (formID) => {
-    return await Question.find({formID});
+export const getQuestionsByFormId = async (formId) => {
+    return await Question.find({formId});
 };
 
 export const insertQuestions = async (clonedQuestions) => {

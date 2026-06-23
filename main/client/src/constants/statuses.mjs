@@ -1,0 +1,6 @@
+export const STATUSES = {
+    ACTIVE: 'ACTIVE',
+    INACTIVE: 'INACTIVE',
+    PENDING: 'PENDING',
+    ARCHIVED: 'ARCHIVED'
+};

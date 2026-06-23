@@ -6,5 +6,5 @@ export const createQuestion = async (questionData) => {
 
 export const findQuestionsByForm = async (formId) => {
     // Handle both formId and formID casings just in case
-    return await Question.find({ $or: [{ formId: formId }, { formID: formId }] }).sort({ order: 1 });
+    return await Question.find({ formId }).sort({ order: 1 });
 };

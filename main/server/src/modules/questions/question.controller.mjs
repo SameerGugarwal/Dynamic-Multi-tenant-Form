@@ -3,9 +3,9 @@ import { successResponse, errorResponse } from '../../shared/utils/apiResponse.m
 
 export const addQuestion = async (req, res, next) => {
     try{
-        const {formID, label, fieldType, order}= req.body;
-        if(!formID || !label || !fieldType || order === undefined){
-            return errorResponse(res, 400, 'formID, label, fieldType, and order are required.');
+        const {formId, label, fieldType, order}= req.body;
+        if(!formId || !label || !fieldType || order === undefined){
+            return errorResponse(res, 400, 'formId, label, fieldType, and order are required.');
         }
         const question = await questionService.createQuestion(req.body);
         return successResponse(res, 201, 'Question added successfully', question);

@@ -1,6 +1,7 @@
 // handles the database logic. We will add a function to create a new user and hash their password before saving\
 import bcrypt from 'bcrypt';
 import * as userRepo from './user.repository.mjs';
+import { AppError } from '../../shared/utils/errors.mjs';
 
 export const createUser = async (userData) => {
     const { name, email, password, roleName, organizationId, centerId } = userData;
@@ -8,12 +9,12 @@ export const createUser = async (userData) => {
     //Check if user already exists
     const existingUser = await userRepo.findUserByEmail(userData.email);
     if (existingUser) {
-        throw new Error('User already exists');
+        throw new AppError('User already exists', 400);
     }
     //Find the correct Role ID based on the name provided
     const role = await userRepo.findRoleByName(roleName);
     if (!role) {
-        throw new Error(`Role ${roleName} not found in Database.`);
+        throw new AppError(`Role ${roleName} not found in Database.`, 404);
     }
     //Hash the password
     const salt = await bcrypt.genSalt(10);
@@ -51,7 +52,7 @@ export const updateUser = async (userId, updateData) => {
     if(updateData.roleName){
         const role = await userRepo.findRoleByName(updateData.roleName);
         if (!role) {
-            throw new Error(`Role ${updateData.roleName} not found in Database.`);
+            throw new AppError(`Role ${updateData.roleName} not found in Database.`, 404);
         }
         updateData.role = role._id;
         delete updateData.roleName;
@@ -59,7 +60,7 @@ export const updateUser = async (userId, updateData) => {
     // find by IDsn update
     const upadateUser = await userRepo.updateUserById(userId, updateData);
     if(!upadateUser){
-        throw new Error('User not found');
+        throw new AppError('User not found', 404);
     }
     return upadateUser;
 

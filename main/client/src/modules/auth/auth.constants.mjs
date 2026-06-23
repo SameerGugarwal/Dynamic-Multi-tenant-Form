@@ -1,0 +1,1 @@
+export const AUTH_CONSTANTS = { DEFAULT_LIMIT: 20 };

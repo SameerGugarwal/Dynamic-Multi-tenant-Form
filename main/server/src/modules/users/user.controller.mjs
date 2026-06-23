@@ -18,6 +18,9 @@ export const createNewUser = async (req, res, next) => {
 // sending user data to its org. 
 export const getOrgUser = async (req, res, next) => {
     try{
+        if (req.user.role?.name === 'Super Admin') {
+            return errorResponse(res, 403, "Super Admins cannot view organization-specific users.");
+        }
         const user = await userService.getUserByOrganization(req.user.organizationId);
         return successResponse(res, 200, 'User fetched successfully', user);
     }catch(error){

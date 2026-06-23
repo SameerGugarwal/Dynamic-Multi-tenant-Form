@@ -1,4 +1,5 @@
 import * as formRepo from './form.repository.mjs';
+import { AppError } from '../../shared/utils/errors.mjs';
 
 // create a form
 export const createForm = async (formData) => {
@@ -20,15 +21,15 @@ export const getFormById = async (formId) => {
 export const cloneMasterForm = async (masterFormId, organizationId, userId) => {
     const masterForm = await formRepo.getFormById(masterFormId);
     if(!masterForm || !masterForm.isMaster){
-        throw new Error('Invalid Master Form ID. Only Master templates can be cloned.');
+        throw new AppError('Invalid Master Form ID. Only Master templates can be cloned.', 400);
     }
     //Duplicate the Form Container 
     const clonedForm = await formRepo.createClonedForm({
         title: `${masterForm.title} (Local Copy)`,
         description: masterForm.description,
         isMaster: false,
-        clonedFormID: masterForm._id,
-        organizationID: organizationId,
+        clonedFromId: masterForm._id,
+        organizationId: organizationId,
         createdBy: userId,
         visibility: 'PRIVATE',
         status: 'DRAFT'

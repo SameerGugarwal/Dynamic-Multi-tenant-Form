@@ -9,14 +9,14 @@ export const createNewForm = async (req, res, next) => {
 
         const userID = req.user._id || req.user.id;
         const currentUser = await userService.getUserById(userID);
-        const isSuperAdmin = currentUser?.role?.name === 'superadmin';
+        const isSuperAdmin = currentUser?.role?.name === 'Super Admin';
         // apane app form banjaye ga
         const formData = {
             ...req.body,
             createdBy:userID,
             //super admin he tho master temp , otherwise it belongs to an org 
             isMaster: isSuperAdmin,
-            OrganizationID: isSuperAdmin? null : currentUser.organizationId,
+            organizationId: isSuperAdmin? null : currentUser.organizationId,
             //new form by defauld is DRAFT jab tak ready nahi he 
             status: req.body.status || 'DRAFT'
         };
@@ -54,7 +54,7 @@ export const fetchMasterForms = async (req, res, next) => {
     try{
         const userID = req.user._id || req.user.id;
         const currentUser = await userService.getUserById(userID);
-        const isSuperAdmin = currentUser?.role?.name === 'superadmin';
+        const isSuperAdmin = currentUser?.role?.name === 'Super Admin';
         //visibility
         const query = isSuperAdmin? {} : { visibility: 'PUBLIC' }
         const form = await formService.getMasterForms(query);
@@ -66,12 +66,15 @@ export const fetchMasterForms = async (req, res, next) => {
 // super admin kisi org ka pvt form na dhek paye !
 export const fetchMyOrgForms = async (req, res, next) => {
     try{
+        if (req.user.role?.name === 'Super Admin') {
+            return errorResponse(res, 403, "Super Admins are restricted from viewing local organization forms.");
+        }
         const userID = req.user._id || req.user.id;
         const currentUser = await userService.getUserById(userID);
-        if(!req.user.OrganizationID){
+        if(!req.user.organizationId){
             return errorResponse(res, 403, 'You do not belong to this organization / Super-Admin is not allowed to access this route');
         }
-        const form = await formService.getOrgForms(req.user.OrganizationID);
+        const form = await formService.getOrgForms(req.user.organizationId);
         return successResponse(res, 200, 'Org forms fetched successfully', form);
     }catch(error){
         next(error);
@@ -82,7 +85,7 @@ export const cloneFormToOrg = async (req, res, next) => {
     try{
         const {masterFormId} = req.body;
         const userID = req.user._id || req.user.id;
-        const orgID = req.user.OrganizationID;
+        const orgID = req.user.organizationId;
 
         if(!orgID){
             return errorResponse(res, 403, 'Super Admins cannot clone forms. Only local organizations can clone.');
@@ -96,15 +99,15 @@ export const cloneFormToOrg = async (req, res, next) => {
 // updating the form 
 export const updateFormDetails = async (req, res, next) => {
     try{
-        const formID = req.params.id;
-        const form = await formService.getFormById(formID);
+        const formId = req.params.id;
+        const form = await formService.getFormById(formId);
         if(!form){
             return errorResponse(res, 404, "Form not found");
         }
-        if(req.user.role.name !== 'superadmin' && String(form.OrganizationID) !== String(req.user.OrganizationID)){
+        if(req.user.role.name !== 'Super Admin' && String(form.organizationId) !== String(req.user.organizationId)){
             return errorResponse(res, 403, "You are not authorized to update this form");
         }
-        const updatedForm = await formService.updateForm(formID, req.body);
+        const updatedForm = await formService.updateForm(formId, req.body);
         return successResponse(res, 200, "Form updated successfully", updatedForm);
     }catch(error){
         next(error);
@@ -113,15 +116,15 @@ export const updateFormDetails = async (req, res, next) => {
 // deleting the form 
 export const deleteFormRecord = async (req, res, next) => {
     try{
-        const formID = req.params.id;
-        const form = await formService.getFormById(formID);
+        const formId = req.params.id;
+        const form = await formService.getFormById(formId);
         if(!form){
             return errorResponse(res, 404, "Form not found");
         }
-        if(req.user.role.name !== 'superadmin' && String(form.OrganizationID) !== String(req.user.OrganizationID)){
+        if(req.user.role.name !== 'Super Admin' && String(form.organizationId) !== String(req.user.organizationId)){
             return errorResponse(res, 403, "You are not authorized to delete this form");
         }
-        await formService.deleteForm(formID);
+        await formService.deleteForm(formId);
         return successResponse(res, 200, "Form deleted successfully");
     }catch(error){
         next(error);

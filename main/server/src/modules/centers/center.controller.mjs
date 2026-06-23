@@ -22,3 +22,16 @@ export const getCenter = async (req, res, next ) =>{
         next(error);
     }
 };
+
+export const updateCenter = async (req, res, next) => {
+    try {
+        const centerId = req.params.id;
+        const updatedCenter = await centerService.updateCenter(centerId, req.body);
+        if (!updatedCenter) {
+            return errorResponse(res, 404, 'Center not found');
+        }
+        return successResponse(res, 200, 'Center updated successfully', updatedCenter);
+    } catch(error) {
+        next(error);
+    }
+};

@@ -1,0 +1,1 @@
+export const FORMS_CONSTANTS = { DEFAULT_LIMIT: 20 };

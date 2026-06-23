@@ -3,3 +3,37 @@ node_modules/
 .DS_Store
 dist/
 build/
+.env.exapmle
+
+# Python scripts
+update_backend.py
+
+# JS files
+auth.test.mjs
+test-advanced-e2e.mjs
+tets-e2e.mjs
+test-logic-engine.mjs
+test-report-engine.mjs
+
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log
+
+#pdf files 
+sample_report.pdf
+sample_report.xlsx
+
+dev-info/APIEndPointTestResults.md
+dev-info/backend_review.md
+dev-info/Backend-Flow.md
+dev-info/FrontEnd-testing.md
+dev-info/FRONTEND.md
+dev-info/MINDMAP.md
+dev-info/UPDATE.md
+dev-info/UPDATES.md

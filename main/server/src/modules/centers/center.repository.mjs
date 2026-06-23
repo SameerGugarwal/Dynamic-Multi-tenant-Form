@@ -11,3 +11,7 @@ export const createCenter = async (centerData) => {
 export const findAllCenters = async () => {
     return await Center.find();
 };
+
+export const updateCenter = async (centerId, updateData) => {
+    return await Center.findByIdAndUpdate(centerId, updateData, { new: true, runValidators: true });
+};

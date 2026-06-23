@@ -1,11 +1,12 @@
 //org. ko initialize karo 
 
 import * as orgRepo from './organization.repository.mjs';
+import { AppError } from '../../shared/utils/errors.mjs';
 
 export const createOrganization = async (orgData) => {
     const existingOrg = await orgRepo.findOrganizationByName(orgData.name);
     if (existingOrg) {
-        throw new Error('Organization already exists');
+        throw new AppError('Organization already exists', 400);
     }
     return await orgRepo.createOrganization(orgData);
 };

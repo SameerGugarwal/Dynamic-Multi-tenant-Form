@@ -22,3 +22,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python scripts
+pop.py
+rewire.py
+update_frontend.py
+
+# JS files
+populate_empty.mjs
+populate_empty_fixed.mjs
+
+dev-info/APIEndPointTestResults.md
+dev-info/backend_review.md
+dev-info/Backend-Flow.md
+dev-info/FrontEnd-testing.md
+dev-info/FRONTEND.md
+dev-info/MINDMAP.md
+dev-info/UPDATE.md
+dev-info/UPDATES.md
