@@ -16,3 +16,11 @@ export const getOrganizationsByCenter = async (centerId) => {
 export const getAllOrganizations = async () => {
     return await orgRepo.findAllOrganizations();
 };
+
+export const updateOrganization = async (orgId, updateData) => {
+    return await orgRepo.updateOrganization(orgId, updateData);
+};
+
+export const getOrganizationInfo = async (orgId) => {
+    return await orgRepo.getOrganizationInfo(orgId);
+};

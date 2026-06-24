@@ -14,9 +14,9 @@ export const ConditionalEngine = {
 
         switch (operator) {
             case 'equals':
-                return String(answer) === String(value);
+                return String(answer).trim().toLowerCase() === String(value).trim().toLowerCase();
             case 'not_equals':
-                return String(answer) !== String(value);
+                return String(answer).trim().toLowerCase() !== String(value).trim().toLowerCase();
             case 'contains':
                 if (Array.isArray(answer)) return answer.includes(value);
                 return String(answer).toLowerCase().includes(String(value).toLowerCase());

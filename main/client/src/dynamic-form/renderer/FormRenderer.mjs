@@ -88,9 +88,8 @@ export class FormRenderer {
             case 'textarea':
                 return `<textarea class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors min-h-[100px] resize-y" data-id="${id}"></textarea>`;
             case 'dropdown':
-                // Using mock options if undefined
-                const options = question.options || ['Option A', 'Option B'];
-                const optsHtml = options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                const dropdownOpts = question.options && question.options.length > 0 ? question.options : ['Option A', 'Option B'];
+                const optsHtml = dropdownOpts.map(opt => `<option value="${opt}">${opt}</option>`).join('');
                 return `
                     <select class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors appearance-none cursor-pointer" data-id="${id}">
                         <option value="" disabled selected>SELECT AN OPTION...</option>
@@ -98,7 +97,7 @@ export class FormRenderer {
                     </select>
                 `;
             case 'radio':
-                const radioOpts = question.options || ['Yes', 'No'];
+                const radioOpts = question.options && question.options.length > 0 ? question.options : ['Yes', 'No'];
                 return `
                     <div class="space-y-2">
                         ${radioOpts.map(opt => `
@@ -112,6 +111,21 @@ export class FormRenderer {
                         `).join('')}
                     </div>
                 `;
+            case 'checkbox':
+                const checkboxOpts = question.options && question.options.length > 0 ? question.options : ['Option 1', 'Option 2'];
+                return `
+                    <div class="space-y-2">
+                        ${checkboxOpts.map(opt => `
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative w-5 h-5 border-2 border-surface-900 bg-surface-50 flex items-center justify-center group-hover:border-brand-500">
+                                    <input type="checkbox" name="${id}[]" value="${opt}" class="question-input sr-only" data-id="${id}" />
+                                    <div class="w-3 h-3 bg-brand-500 hidden checkbox-check"></div>
+                                </div>
+                                <span class="text-sm font-bold text-surface-900">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
             default:
                 return `<input type="text" class="question-input w-full px-4 py-3 border-2 border-surface-900" data-id="${id}" />`;
         }
@@ -119,7 +133,7 @@ export class FormRenderer {
 
     initListeners() {
         // Handle input changes
-        this.container.addEventListener('input', (e) => {
+        const handleInteraction = (e) => {
             const target = e.target;
             if (target.classList.contains('question-input')) {
                 const qId = target.dataset.id;
@@ -137,11 +151,27 @@ export class FormRenderer {
                         target.nextElementSibling.classList.remove('hidden');
                     }
                 }
+                
+                // If checkbox, manually handle styling
+                if (target.type === 'checkbox') {
+                    if (target.checked) {
+                        target.nextElementSibling.classList.remove('hidden');
+                    } else {
+                        target.nextElementSibling.classList.add('hidden');
+                    }
+                    
+                    // Harvest all checked values for this group
+                    const checkboxes = this.container.querySelectorAll(`input[name="${qId}[]"]:checked`);
+                    this.answers[qId] = Array.from(checkboxes).map(cb => cb.value);
+                }
 
                 // Re-evaluate visibility engine
                 this.evaluateAndRenderVisibility();
             }
-        });
+        };
+
+        this.container.addEventListener('input', handleInteraction);
+        this.container.addEventListener('change', handleInteraction);
 
         // Submit Payload
         this.container.querySelector('#submit-form-btn').addEventListener('click', async () => {

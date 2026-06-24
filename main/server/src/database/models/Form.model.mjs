@@ -39,6 +39,10 @@ const FormSchema = new Schema(
       type: String,
       enum: ['DRAFT', 'PUBLISHED', 'ARCHIVED'],
       default: 'DRAFT'
+    },
+    sections: {
+      type: [Schema.Types.Mixed],
+      default: []
     }
   },
   { timestamps: true }

@@ -20,15 +20,31 @@ export const VisibilityEngine = {
             // Future feature: add section-level visibility rules.
             visibilityMap.sections[section.id] = true;
 
+            let prevQuestionId = null;
+
             section.questions.forEach(question => {
                 // Check if this specific question has a visibility rule group attached
                 if (question.visibilityRules && question.visibilityRules.rules && question.visibilityRules.rules.length > 0) {
-                    const isVisible = ConditionalEngine.evaluateRuleGroup(question.visibilityRules, answers);
+                    
+                    // Resolve 'q_previous' to the actual previous question ID
+                    const resolvedRules = question.visibilityRules.rules.map(rule => {
+                        if (rule.targetQuestionId === 'q_previous') {
+                            return { ...rule, targetQuestionId: prevQuestionId };
+                        }
+                        return rule;
+                    });
+                    
+                    const resolvedRuleGroup = { ...question.visibilityRules, rules: resolvedRules };
+                    
+                    const isVisible = ConditionalEngine.evaluateRuleGroup(resolvedRuleGroup, answers);
                     visibilityMap.questions[question.id] = isVisible;
                 } else {
                     // No rules defined? Default to visible.
                     visibilityMap.questions[question.id] = true;
                 }
+                
+                // Update prevQuestionId for the next iteration
+                prevQuestionId = question.id;
             });
         });
 

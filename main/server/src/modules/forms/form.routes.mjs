@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNewForm, fetchMasterForms, fetchMyOrgForms, cloneFormToOrg, updateFormDetails, deleteFormRecord } from './form.controller.mjs';
+import { createNewForm, fetchMasterForms, fetchMyOrgForms, cloneFormToOrg, updateFormDetails, deleteFormRecord, getFormRecord } from './form.controller.mjs';
 import { protect } from '../../middleware/auth.middleware.mjs';
 import { authorizeRoles } from '../../middleware/role.middleware.mjs';
 
@@ -85,7 +85,7 @@ router.post('/clone',authorizeRoles('Organization Admin', 'Center Admin'), clone
  *       200:
  *         description: Form updated successfully
  */
-router.put('/:id',authorizeRoles('Organization Admin', 'Center Admin'), updateFormDetails);
+router.put('/:id',authorizeRoles('Super Admin', 'Organization Admin', 'Center Admin'), updateFormDetails);
 
 /*
 // --- User's Original Code ---
@@ -113,6 +113,7 @@ router.put('/:id',authorizeRoles('Organization Admin', 'Center Admin'), deleteFo
  *       200:
  *         description: Form deleted successfully
  */
+router.get('/:id', authorizeRoles('Super Admin', 'Organization Admin', 'Center Admin'), getFormRecord);
 router.delete('/:id',authorizeRoles('Organization Admin', 'Center Admin'), deleteFormRecord);
 
 export default router;

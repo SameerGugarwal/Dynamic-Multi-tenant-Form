@@ -4,6 +4,17 @@ import * as formService from './form.service.mjs';
 import * as userService from '../users/user.service.mjs';
 import { successResponse, errorResponse } from '../../shared/utils/apiResponse.mjs';
 
+export const getFormRecord = async (req, res, next) => {
+    try {
+        const formId = req.params.id;
+        const form = await formService.getFormById(formId);
+        if(!form) return errorResponse(res, 404, "Form not found");
+        return successResponse(res, 200, "Form fetched successfully", form);
+    } catch(error) {
+        next(error);
+    }
+};
+
 export const createNewForm = async (req, res, next) => {
     try{
 
@@ -96,6 +107,7 @@ export const cloneFormToOrg = async (req, res, next) => {
         next(error);
     }
 };
+
 // updating the form 
 export const updateFormDetails = async (req, res, next) => {
     try{

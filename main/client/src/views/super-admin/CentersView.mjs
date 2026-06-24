@@ -59,6 +59,11 @@ export default class CentersView {
         this.container.querySelector('#close-edit-modal').addEventListener('click', () => {
             this.container.querySelector('#edit-modal-container').classList.add('hidden');
         });
+
+        // Close View Orgs Modal
+        this.container.querySelector('#close-orgs-modal').addEventListener('click', () => {
+            this.container.querySelector('#view-orgs-modal-container').classList.add('hidden');
+        });
         
         await this.loadData();
     }
@@ -97,7 +102,7 @@ export default class CentersView {
                         <form id="edit-center-form" class="space-y-4">
                             <input type="hidden" id="edit-center-id">
                             <div>
-                                <label class="text-xs font-bold block mb-1">Center Name</label>
+                                <label class="text-xs font-bold block mb-1 ">Center Name</label>
                                 <input type="text" id="ec-name" class="w-full border-2 p-3 border-surface-900" required>
                             </div>
                             <div>
@@ -109,6 +114,19 @@ export default class CentersView {
                             </div>
                             <button type="submit" class="w-full bg-brand-500 text-white font-black p-4 mt-4 uppercase tracking-widest hover:bg-brand-600 transition-colors">SAVE CHANGES</button>
                         </form>
+                    </div>
+                </div>
+
+                <!-- VIEW ORGS MODAL OVERLAY -->
+                <div id="view-orgs-modal-container" class="hidden fixed inset-0 bg-surface-900 bg-opacity-75 flex items-center justify-center z-50">
+                    <div class="bg-surface-50 border-4 border-surface-900 p-8 max-w-2xl w-full shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative max-h-[80vh] flex flex-col">
+                        <button id="close-orgs-modal" class="absolute top-4 right-4 text-surface-500 hover:text-surface-900 font-bold uppercase tracking-widest text-xs">CLOSE X</button>
+                        <h3 class="text-2xl font-black uppercase mb-2 border-b-2 border-surface-900 pb-2">ORGANIZATIONS</h3>
+                        <p id="view-orgs-subtitle" class="text-xs font-bold uppercase tracking-widest text-surface-500 mb-6">LOADING...</p>
+                        
+                        <div class="overflow-y-auto flex-1 border-2 border-surface-200 p-4 bg-white text-decoration-none" id="orgs-list-container">
+                            <!-- Orgs render here -->
+                        </div>
                     </div>
                 </div>
 
@@ -126,12 +144,12 @@ export default class CentersView {
             
             const rows = this.centers.map(center => ({
                 id: center.id || center._id || 'N/A',
-                name: center.name,
+                name: `<button class="view-orgs-btn font-bold uppercase tracking-widest text-brand-500 hover:text-brand-700 underline transition-colors text-decoration-none" data-id="${center._id}" data-name="${center.name}">${center.name}</button>`,
                 location: center.location || 'Unknown',
                 status: center.isActive !== false
                     ? '<span class="text-green-600 font-bold uppercase text-xs tracking-widest">ACTIVE</span>' 
                     : '<span class="text-red-600 font-bold uppercase text-xs tracking-widest">INACTIVE</span>',
-                actions: `<button class="edit-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-brand-500 transition-colors" data-id="${center._id}" data-name="${center.name}" data-active="${center.isActive !== false}">EDIT</button>`
+                actions: `<button class="edit-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-brand-500 transition-colors text-decoration-none" data-id="${center._id}" data-name="${center.name}" data-active="${center.isActive !== false}">EDIT</button>`
             }));
 
             const table = new Table(headers, rows);
@@ -149,6 +167,44 @@ export default class CentersView {
                     document.getElementById('ec-status').value = isActive ? 'ACTIVE' : 'INACTIVE';
                     
                     this.container.querySelector('#edit-modal-container').classList.remove('hidden');
+                });
+            });
+
+            // Bind View Orgs Buttons
+            this.container.querySelectorAll('.view-orgs-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.target.dataset.id;
+                    const name = e.target.dataset.name;
+                    
+                    const modal = this.container.querySelector('#view-orgs-modal-container');
+                    const subtitle = this.container.querySelector('#view-orgs-subtitle');
+                    const listContainer = this.container.querySelector('#orgs-list-container');
+                    
+                    subtitle.textContent = `CENTER: ${name}`;
+                    listContainer.innerHTML = '<p class="text-xs font-bold animate-pulse-soft">Loading organizations...</p>';
+                    modal.classList.remove('hidden');
+                    
+                    try {
+                        const res = await http.get(`/organizations?centerId=${id}`);
+                        const orgRaw = res.data || res || [];
+                        const orgData = Array.isArray(orgRaw) ? orgRaw : (orgRaw.data || []);
+                        
+                        if (orgData.length === 0) {
+                            listContainer.innerHTML = '<p class="text-surface-500 font-bold uppercase text-xs">No organizations assigned to this center.</p>';
+                        } else {
+                            listContainer.innerHTML = orgData.map(org => `
+                                <div class="border-b-2 border-surface-200 pb-3 mb-3 last:border-0 last:mb-0 last:pb-0">
+                                    <div class="font-black uppercase tracking-widest text-brand-600">${org.name}</div>
+                                    <div class="text-xs font-bold text-surface-500">${org.contactEmail || 'No Email'}</div>
+                                    <div class="text-[10px] mt-1 uppercase tracking-widest ${org.isActive !== false ? 'text-green-600' : 'text-red-600'}">
+                                        STATUS: ${org.isActive !== false ? 'ACTIVE' : 'INACTIVE'}
+                                    </div>
+                                </div>
+                            `).join('');
+                        }
+                    } catch(err) {
+                        listContainer.innerHTML = '<p class="text-red-600 font-bold uppercase text-xs">Failed to load organizations.</p>';
+                    }
                 });
             });
 

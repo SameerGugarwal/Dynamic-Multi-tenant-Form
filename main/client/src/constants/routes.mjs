@@ -12,6 +12,13 @@ export const ROUTES = {
     SUPER_ADMIN_ORGS: '/super-admin/organizations',
     SUPER_ADMIN_FORMS: '/super-admin/forms',
     
+    // Center Admin Tier
+    CENTER_DASHBOARD: '/center/dashboard',
+    CENTER_ORGS: '/center/organizations',
+    CENTER_USERS: '/center/users',
+    CENTER_REPORTS: '/center/reports',
+    CENTER_SETTINGS: '/center/settings',
+    
     // Org Admin Tier
     ORG_DASHBOARD: '/organization/dashboard',
     ORG_USERS: '/organization/users',

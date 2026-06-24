@@ -35,7 +35,7 @@ export const routesConfig = [
     },
     {
         path: ROUTES.SUPER_ADMIN_FORMS,
-        view: () => import('../views/organization/FormsView.mjs'),
+        view: () => import('../views/super-admin/FormsView.mjs'),
         layout: 'SuperAdminLayout',
         requiresAuth: true,
         allowedRoles: ['SUPER_ADMIN']
@@ -46,6 +46,41 @@ export const routesConfig = [
         layout: 'SuperAdminLayout',
         requiresAuth: true,
         allowedRoles: ['SUPER_ADMIN']
+    },
+    {
+        path: ROUTES.CENTER_DASHBOARD,
+        view: () => import('../views/center/DashboardView.mjs'),
+        layout: 'CenterLayout',
+        requiresAuth: true,
+        allowedRoles: ['CENTER_ADMIN']
+    },
+    {
+        path: ROUTES.CENTER_ORGS,
+        view: () => import('../views/center/OrganizationsView.mjs'),
+        layout: 'CenterLayout',
+        requiresAuth: true,
+        allowedRoles: ['CENTER_ADMIN']
+    },
+    {
+        path: ROUTES.CENTER_USERS,
+        view: () => import('../views/center/UsersView.mjs'),
+        layout: 'CenterLayout',
+        requiresAuth: true,
+        allowedRoles: ['CENTER_ADMIN']
+    },
+    {
+        path: ROUTES.CENTER_REPORTS,
+        view: () => import('../views/center/ReportsView.mjs'),
+        layout: 'CenterLayout',
+        requiresAuth: true,
+        allowedRoles: ['CENTER_ADMIN']
+    },
+    {
+        path: ROUTES.CENTER_SETTINGS,
+        view: () => import('../views/center/SettingsView.mjs'),
+        layout: 'CenterLayout',
+        requiresAuth: true,
+        allowedRoles: ['CENTER_ADMIN']
     },
     {
         path: ROUTES.ORG_DASHBOARD,

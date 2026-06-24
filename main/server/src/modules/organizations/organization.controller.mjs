@@ -34,9 +34,11 @@ export const getOrg = async (req, res, next) => {
 
 export const getAllOrgs = async (req, res, next) => {
     try{
-        const org = await organizationService.getAllOrganizations();
-        // Since successResponse doesn't have a count parameter natively, we can wrap the data
-        return successResponse(res, 200, 'All organizations fetched', { count: org.length, data: org });
+        const centerId = req.query.centerId;
+        const orgs = centerId 
+            ? await organizationService.getOrganizationsByCenter(centerId)
+            : await organizationService.getAllOrganizations();
+        return successResponse(res, 200, 'Organizations fetched', { count: orgs.length, data: orgs });
     }catch(error){
         next(error);
     }
@@ -47,6 +49,28 @@ export const getCenterOrgs = async (req, res, next) => {
         const orgs = await organizationService.getOrganizationsByCenter(req.user.centerId);
         return successResponse(res, 200, 'Center organizations fetched', { count: orgs.length, data: orgs });
     } catch (error) {
+        next(error);
+    }
+};
+
+export const updateOrganization = async (req, res, next) => {
+    try {
+        const orgId = req.params.id;
+        const updatedOrg = await organizationService.updateOrganization(orgId, req.body);
+        if (!updatedOrg) return errorResponse(res, 404, 'Organization not found');
+        return successResponse(res, 200, 'Organization updated successfully', updatedOrg);
+    } catch(error) {
+        next(error);
+    }
+};
+
+export const getOrganizationInfo = async (req, res, next) => {
+    try {
+        const orgId = req.params.id;
+        const info = await organizationService.getOrganizationInfo(orgId);
+        if (!info) return errorResponse(res, 404, 'Organization not found');
+        return successResponse(res, 200, 'Organization info fetched', info);
+    } catch(error) {
         next(error);
     }
 };

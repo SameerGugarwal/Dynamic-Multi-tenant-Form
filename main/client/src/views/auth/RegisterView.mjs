@@ -52,6 +52,21 @@ export default class RegisterView {
                         >
                     </div>
 
+                    <div>
+                        <label class="block text-xs font-bold text-surface-900 uppercase tracking-widest mb-2" for="roleName">Select Role</label>
+                        <select 
+                            id="roleName" 
+                            name="roleName"
+                            required
+                            class="w-full px-4 py-3 border border-surface-300 bg-transparent text-surface-900 font-sans text-sm focus:outline-none focus:border-surface-900 transition-colors rounded-none appearance-none"
+                        >
+                            <option value="User">User</option>
+                            <option value="Organization Admin">Organization Admin</option>
+                            <option value="Center Admin">Center Admin</option>
+                            <option value="Super Admin">Super Admin</option>
+                        </select>
+                    </div>
+
                     <div id="error-message" class="text-red-600 text-xs font-medium hidden"></div>
 
                     <button 
@@ -83,8 +98,9 @@ export default class RegisterView {
             const name = form.name.value.trim();
             const email = form.email.value.trim();
             const password = form.password.value.trim();
+            const roleName = form.roleName.value;
 
-            if (!name || !email || !password) {
+            if (!name || !email || !password || !roleName) {
                 errorMsg.textContent = 'Please fill in all fields.';
                 errorMsg.classList.remove('hidden');
                 return;
@@ -95,12 +111,12 @@ export default class RegisterView {
             form.name.disabled = true;
             form.email.disabled = true;
             form.password.disabled = true;
+            form.roleName.disabled = true;
             errorMsg.classList.add('hidden');
 
             try {
-                // Handoff to Authentication Layer to register standard User role
-                // By default the backend handles 'User' role if not specified
-                await AuthService.register({ name, email, password, roleName: 'User' });
+                // Submit selected role
+                await AuthService.register({ name, email, password, roleName });
                 
             } catch (error) {
                 errorMsg.textContent = error.response?.data?.message || error.message || 'Registration failed. Please try again.';
@@ -111,6 +127,7 @@ export default class RegisterView {
                 form.name.disabled = false;
                 form.email.disabled = false;
                 form.password.disabled = false;
+                form.roleName.disabled = false;
             }
         });
     }

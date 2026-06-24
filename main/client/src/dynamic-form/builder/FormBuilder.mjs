@@ -107,9 +107,8 @@ export class FormBuilder {
         // 8. Save Payload
         this.container.querySelector('#save-schema-btn').addEventListener('click', async () => {
             const payload = formStore.getState();
-            console.log("FINAL SCHEMA PAYLOAD: ", JSON.stringify(payload, null, 2));
-            const { Toast } = await import('../../components/toast/Toast.mjs');
-            Toast.success('Schema generated! Check console for JSON.');
+            // Dispatch a custom event so the parent view can handle the API call
+            this.container.dispatchEvent(new CustomEvent('schema-saved', { detail: payload }));
         });
 
         // 9. Preview Engine

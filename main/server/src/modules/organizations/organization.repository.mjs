@@ -9,9 +9,22 @@ export const createOrganization = async (orgData) => {
 };
 
 export const findOrganizationsByCenter = async (centerId) => {
-    return await Organization.find({ centers: centerId });
+    return await Organization.find({ centers: centerId }).populate('centers', 'name');
 };
 
 export const findAllOrganizations = async () => {
-    return await Organization.find();
+    return await Organization.find().populate('centers', 'name');
+};
+
+
+export const updateOrganization = async (orgId, updateData) => {
+    return await Organization.findByIdAndUpdate(orgId, updateData, { new: true, runValidators: true });
+};
+
+export const getOrganizationInfo = async (orgId) => {
+    const org = await Organization.findById(orgId).populate('centers', 'name');
+    if (!org) return null;
+    const { User } = await import('../../database/index.mjs');
+    const userCount = await User.countDocuments({ organizationId: orgId });
+    return { ...org.toObject(), userCount };
 };

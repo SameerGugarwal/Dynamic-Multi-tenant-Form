@@ -45,6 +45,9 @@ export const AuthService = {
                     case 'SUPER_ADMIN':
                         router.navigate(ROUTES.SUPER_ADMIN_DASHBOARD);
                         break;
+                    case 'CENTER_ADMIN':
+                        router.navigate(ROUTES.CENTER_DASHBOARD);
+                        break;
                     case 'ORG_ADMIN':
                         router.navigate(ROUTES.ORG_DASHBOARD);
                         break;
@@ -92,6 +95,9 @@ export const AuthService = {
                 switch (normalizedRole) {
                     case 'SUPER_ADMIN':
                         router.navigate(ROUTES.SUPER_ADMIN_DASHBOARD);
+                        break;
+                    case 'CENTER_ADMIN':
+                        router.navigate(ROUTES.CENTER_DASHBOARD);
                         break;
                     case 'ORG_ADMIN':
                         router.navigate(ROUTES.ORG_DASHBOARD);

@@ -40,6 +40,14 @@ class FormStore {
     }
 
     /**
+     * Load an entire state object (useful for editing existing forms)
+     */
+    loadState(newState) {
+        this.state = JSON.parse(JSON.stringify(newState));
+        this.notify();
+    }
+
+    /**
      * Update basic form metadata
      */
     updateMetadata(title, description) {

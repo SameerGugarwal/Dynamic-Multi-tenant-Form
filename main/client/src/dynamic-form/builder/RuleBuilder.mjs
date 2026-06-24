@@ -14,7 +14,12 @@ export class RuleBuilder {
                             <span class="font-bold">IF</span>
                             <span class="bg-white px-2 py-1 border border-surface-200">${rule.targetQuestionId}</span>
                             <span class="text-surface-500 uppercase">${rule.operator}</span>
-                            <span class="bg-white px-2 py-1 border border-surface-200">${rule.value}</span>
+                            <input type="text" class="rule-value-input bg-white px-2 py-1 border border-surface-200 focus:outline-none focus:border-purple-500 w-24" 
+                                value="${rule.value}"
+                                data-section-id="${sectionId}"
+                                data-question-id="${question.id}"
+                                data-rule-index="${idx}"
+                            >
                             <button class="remove-rule-btn ml-auto text-surface-400 hover:text-red-600"
                                 data-section-id="${sectionId}"
                                 data-question-id="${question.id}"
@@ -61,6 +66,25 @@ export class RuleBuilder {
                 const question = formStore.getState().sections.find(s => s.id === sId).questions.find(q => q.id === qId);
                 const rules = [...question.visibilityRules.rules];
                 rules.splice(idx, 1);
+                
+                formStore.updateQuestion(sId, qId, {
+                    visibilityRules: {
+                        logicalOperator: question.visibilityRules.logicalOperator,
+                        rules
+                    }
+                });
+            });
+        });
+
+        container.querySelectorAll('.rule-value-input').forEach(input => {
+            input.addEventListener('blur', (e) => {
+                const sId = e.target.dataset.sectionId;
+                const qId = e.target.dataset.questionId;
+                const idx = parseInt(e.target.dataset.ruleIndex);
+                
+                const question = formStore.getState().sections.find(s => s.id === sId).questions.find(q => q.id === qId);
+                const rules = [...question.visibilityRules.rules];
+                rules[idx].value = e.target.value;
                 
                 formStore.updateQuestion(sId, qId, {
                     visibilityRules: {
