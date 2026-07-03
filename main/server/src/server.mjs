@@ -91,7 +91,7 @@ app.use(cors());
 
 // Enable Strict CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim().replace(/\/$/, ''))
   : ['http://localhost:3000', 'http://localhost:3501', 'http://localhost:5173'];
 
 app.use(cors({
@@ -132,6 +132,12 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.use('/api/v1', router);
+
+// Health check endpoint for Render
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
+});
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {
