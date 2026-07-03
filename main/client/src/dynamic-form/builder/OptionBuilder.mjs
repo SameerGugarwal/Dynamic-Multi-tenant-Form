@@ -29,7 +29,7 @@ export class OptionBuilder {
                         </div>
                     `).join('')}
                 </div>
-                <button class="add-option-btn text-[10px] font-black uppercase tracking-widest border-2 border-surface-900 bg-white px-4 py-2 hover:bg-surface-900 hover:text-white transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)]" 
+                <button class="add-option-btn text-[10px] font-black uppercase tracking-widest border-2 border-surface-900 bg-white px-4 py-2 hover:bg-surface-900 hover:text-white transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)]" 
                     data-section-id="${sectionId}" 
                     data-question-id="${question.id}">
                     + ADD NEW OPTION

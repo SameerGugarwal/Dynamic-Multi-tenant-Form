@@ -43,7 +43,7 @@ export class FormRenderer {
 
                 <!-- Footer Actions -->
                 <div class="mt-16 pt-8 border-t-2 border-surface-900 flex justify-end">
-                    <button id="submit-form-btn" class="bg-surface-900 text-white px-10 py-4 font-bold uppercase tracking-widest text-sm hover:bg-brand-600 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <button id="submit-form-btn" class="bg-surface-900 text-white px-10 py-4 font-bold uppercase tracking-widest text-sm hover:bg-brand-600 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         SUBMIT PAYLOAD
                     </button>
                 </div>
@@ -86,7 +86,7 @@ export class FormRenderer {
             case 'text':
                 return `<input type="text" class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors" data-id="${id}" />`;
             case 'textarea':
-                return `<textarea class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors min-h-[100px] resize-y" data-id="${id}"></textarea>`;
+                return `<textarea class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors min-h-25 resize-y" data-id="${id}"></textarea>`;
             case 'dropdown':
                 const dropdownOpts = question.options && question.options.length > 0 ? question.options : ['Option A', 'Option B'];
                 const optsHtml = dropdownOpts.map(opt => `<option value="${opt}">${opt}</option>`).join('');

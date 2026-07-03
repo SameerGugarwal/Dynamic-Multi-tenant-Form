@@ -58,7 +58,7 @@ export class FormBuilder {
                     <textarea 
                         id="form-description"
                         placeholder="Enter form description or instructions..."
-                        class="w-full text-surface-600 font-sans text-base focus:outline-none border-l-2 border-transparent focus:border-brand-500 pl-4 py-2 transition-all bg-transparent resize-none min-h-[80px]"
+                        class="w-full text-surface-600 font-sans text-base focus:outline-none border-l-2 border-transparent focus:border-brand-500 pl-4 py-2 transition-all bg-transparent resize-none min-h-20"
                     >${state.description}</textarea>
                 </div>
 

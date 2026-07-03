@@ -59,7 +59,7 @@ export default class UsersView {
                         <div class="flex-1"><label class="text-xs font-bold uppercase tracking-widest block mb-1">Name</label><input type="text" id="nu-name" class="w-full border-2 p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
                         <div class="flex-1"><label class="text-xs font-bold uppercase tracking-widest block mb-1">Email</label><input type="email" id="nu-email" class="w-full border-2 p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
                         <div class="flex-1"><label class="text-xs font-bold uppercase tracking-widest block mb-1">Password</label><input type="password" id="nu-pass" class="w-full border-2 p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
-                        <button type="submit" class="bg-brand-500 text-white font-black uppercase tracking-widest px-8 py-3 h-[52px] border-2 border-surface-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-none transition-all">CREATE</button>
+                        <button type="submit" class="bg-brand-500 text-white font-black uppercase tracking-widest px-8 py-3 h-13 border-2 border-surface-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-none transition-all">CREATE</button>
                     </form>
                 </div>
 
