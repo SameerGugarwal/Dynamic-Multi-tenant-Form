@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
-@theme {
-  /* Premium Typography */
-  --font-sans: "Inter", system-ui, sans-serif;
+@theme{
+    --font-sans: "Inter", system-ui, sans-serif;
   --font-heading: "Outfit", system-ui, sans-serif;
 
   /* Brand Colors: Monochromatic Off-Black/Grey Palette (ABSOLUTELY NO PURPLE/INDIGO) */
@@ -106,4 +105,6 @@
   .text-fluid-h1 { font-size: var(--text-fluid-h1); }
   .text-fluid-h2 { font-size: var(--text-fluid-h2); }
   .text-fluid-p { font-size: var(--text-fluid-p); }
+  .animate-fade-in  { animation: var(--animate-fade-in); }  
+  .animate-slide-up { animation: var(--animate-slide-up); }  
 }

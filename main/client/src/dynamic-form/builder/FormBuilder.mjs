@@ -27,7 +27,7 @@ export class FormBuilder {
 
     render(state) {
         this.container.innerHTML = `
-            <div class="max-w-5xl mx-auto pb-32 animate-fade-in">
+            <div class="max-w-5xl mx-auto pb-32 animate-fade-in ">
                 <!-- Header Actions -->
                 <div class="flex justify-between items-center mb-8 pb-4 border-b-2 border-surface-900">
                     <div>
@@ -35,10 +35,10 @@ export class FormBuilder {
                         <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-1">DYNAMIC FORM COMPOSITION ENGINE</p>
                     </div>
                     <div class="flex items-center gap-4">
-                        <button id="preview-schema-btn" class="border-2 border-surface-900 bg-surface-50 text-surface-900 px-6 py-3 font-bold uppercase tracking-widest text-xs hover:bg-surface-900 hover:text-white transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <button id="preview-schema-btn" class="border-2 border-surface-900 bg-surface-50 text-surface-900 px-6 py-3 font-bold uppercase tracking-widest text-xs hover:bg-surface-900 hover:text-white transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             PREVIEW ENGINE
                         </button>
-                        <button id="save-schema-btn" class="bg-surface-900 text-white px-8 py-3 font-bold uppercase tracking-widest text-xs hover:bg-brand-600 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <button id="save-schema-btn" class="bg-surface-900 text-white px-8 py-3 font-bold uppercase tracking-widest text-xs hover:bg-brand-600 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             SAVE SCHEMA
                         </button>
                     </div>
@@ -70,7 +70,6 @@ export class FormBuilder {
                 <!-- Global Add Section Action -->
                 <div class="mt-12 flex justify-center">
                     <button id="add-section-btn" class="border-2 border-dashed border-surface-400 text-surface-500 hover:text-surface-900 hover:border-surface-900 hover:bg-surface-50 w-full py-6 font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
                         ADD NEW SECTION
                     </button>
                 </div>
@@ -81,8 +80,10 @@ export class FormBuilder {
     }
 
     initListeners(state) {
-        // Modular Listeners
-        SectionBuilder.attachListeners(this.container);
+        // Modular Listeners (Delegates question logic to SectionBuilder)
+        if (SectionBuilder && SectionBuilder.attachListeners) {
+            SectionBuilder.attachListeners(this.container);
+        }
 
         // 1. Meta Data
         const titleInput = this.container.querySelector('#form-title');
@@ -92,30 +93,25 @@ export class FormBuilder {
             formStore.updateMetadata(titleInput.value, descInput.value);
         };
         
-        titleInput.addEventListener('blur', handleMetaChange);
-        descInput.addEventListener('blur', handleMetaChange);
+        titleInput.addEventListener('change', handleMetaChange);
+        descInput.addEventListener('change', handleMetaChange);
 
         // 2. Add Section
         const addSecBtn = this.container.querySelector('#add-section-btn');
-        // Prevent duplicate listeners on re-render by replacing clone
-        const newAddSecBtn = addSecBtn.cloneNode(true);
-        addSecBtn.parentNode.replaceChild(newAddSecBtn, addSecBtn);
-        newAddSecBtn.addEventListener('click', () => {
+        addSecBtn.addEventListener('click', () => {
             formStore.addSection();
         });
 
-        // 8. Save Payload
+        // 3. Save Payload
         this.container.querySelector('#save-schema-btn').addEventListener('click', async () => {
             const payload = formStore.getState();
-            // Dispatch a custom event so the parent view can handle the API call
             this.container.dispatchEvent(new CustomEvent('schema-saved', { detail: payload }));
         });
 
-        // 9. Preview Engine
+        // 4. Preview Engine
         this.container.querySelector('#preview-schema-btn').addEventListener('click', () => {
             const payload = formStore.getState();
             
-            // Create a full-screen overlay for the FormRenderer
             const overlay = document.createElement('div');
             overlay.className = 'fixed inset-0 z-[100] bg-surface-50 overflow-y-auto animate-fade-in p-6';
             
@@ -129,17 +125,15 @@ export class FormBuilder {
                         CLOSE PREVIEW
                     </button>
                 </div>
-                <div id="renderer-mount-point"></div>
+                <div id="renderer-mount-point" class="max-w-4xl mx-auto"></div>
             `;
             
             document.body.appendChild(overlay);
 
-            // Mount the FormRenderer
             const rendererContainer = overlay.querySelector('#renderer-mount-point');
             const renderer = new FormRenderer(rendererContainer, payload);
             renderer.mount();
 
-            // Handle Close
             overlay.querySelector('#close-preview-btn').addEventListener('click', () => {
                 document.body.removeChild(overlay);
             });

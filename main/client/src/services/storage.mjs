@@ -1,4 +1,7 @@
-export const StorageService = {
-    set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
-    get(k) { return JSON.parse(localStorage.getItem(k)); }
+export const StorageService ={
+    
+    set(key, value) { localStorage.setItem(key, JSON.stringify(value)); },
+    get(key) { return JSON.parse(localStorage.getItem(key)); },
+    remove(key) { localStorage.removeItem(key); },
+    clear() { localStorage.clear(); }
 };

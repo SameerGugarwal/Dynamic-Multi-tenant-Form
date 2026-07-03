@@ -32,9 +32,13 @@ export const generatePDF = (submission, user, form) => {
 
             if (submission.answers && Array.isArray(submission.answers)) {
                 const questionMap = {};
-                if (form && form.questions) {
-                    form.questions.forEach(q => {
-                        questionMap[q._id.toString()] = q.label;
+                if (form && form.sections) {
+                    form.sections.forEach(sec => {
+                        if (sec.questions && Array.isArray(sec.questions)) {
+                            sec.questions.forEach(q => {
+                                if (q.id) questionMap[q.id.toString()] = q.text || q.label || 'Untitled Question';
+                            });
+                        }
                     });
                 }
 

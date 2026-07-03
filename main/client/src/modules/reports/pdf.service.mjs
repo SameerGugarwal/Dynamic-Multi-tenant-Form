@@ -1,42 +1,25 @@
-export const PDFService = {
-    /**
-     * Triggers a native print dialogue optimized for PDF printing
-     * @param {string} title 
-     * @param {HTMLElement} elementToPrint 
-     */
-    exportToPDF(title, elementToPrint) {
-        if (!elementToPrint) {
-            console.warn('No element provided for PDF export.');
-            return;
-        }
+import { API_BASE_URL } from '../../constants/apiEndpoints.mjs';
+import { TokenService } from '../../services/token.service.mjs';
 
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
+export const PdfService = {
+    downloadReport: async (submissionId) => {
+        const token = TokenService.getToken();
+        const url = `${API_BASE_URL}/reports/download/${submissionId}?format=pdf`;
         
-        // Inject styles directly for the print window to match our brutalist theme
-        const styles = `
-            <style>
-                body { font-family: 'Inter', sans-serif; padding: 20px; color: #111; }
-                h1 { font-family: 'Outfit', sans-serif; text-transform: uppercase; border-bottom: 2px solid #111; padding-bottom: 10px; }
-                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                th, td { border: 1px solid #111; padding: 12px; text-align: left; }
-                th { background-color: #f5f5f5; text-transform: uppercase; font-size: 12px; }
-            </style>
-        `;
-
-        printWindow.document.write('<html><head><title>' + title + '</title>');
-        printWindow.document.write(styles);
-        printWindow.document.write('</head><body>');
-        printWindow.document.write(`<h1>${title}</h1>`);
-        printWindow.document.write(elementToPrint.innerHTML);
-        printWindow.document.write('</body></html>');
+        const res = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
         
-        printWindow.document.close();
-        printWindow.focus();
+        if (!res.ok) throw new Error('Failed to download PDF');
         
-        // Trigger print dialog (users can Save as PDF)
-        setTimeout(() => {
-            printWindow.print();
-            printWindow.close();
-        }, 250);
+        const blob = await res.blob();
+        const objectUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = `report_${submissionId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(objectUrl);
     }
 };

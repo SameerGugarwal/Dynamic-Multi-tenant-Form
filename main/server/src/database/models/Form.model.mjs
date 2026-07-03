@@ -43,7 +43,11 @@ const FormSchema = new Schema(
     sections: {
       type: [Schema.Types.Mixed],
       default: []
-    }
+    },
+    assignedOrgs: [{ 
+      type: Schema.Types.ObjectId, 
+      ref: 'Organization' 
+    }]
   },
   { timestamps: true }
 );

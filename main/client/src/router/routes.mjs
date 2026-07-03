@@ -10,13 +10,13 @@ export const routesConfig = [
     {
         path: ROUTES.LOGIN,
         view: ()=> import('../views/auth/LoginView.mjs'),
-        layout: 'CenterLayout',
+        layout: 'AuthLayout',
         requiresAuth: false
     },
     {
         path: ROUTES.REGISTER,
         view: ()=> import('../views/auth/RegisterView.mjs'),
-        layout: 'CenterLayout',
+        layout: 'AuthLayout',
         requiresAuth: false
     },
     {
@@ -43,6 +43,20 @@ export const routesConfig = [
     {
         path: ROUTES.SUPER_ADMIN_ORGS,
         view: () => import('../views/super-admin/OrganizationsView.mjs'),
+        layout: 'SuperAdminLayout',
+        requiresAuth: true,
+        allowedRoles: ['SUPER_ADMIN']
+    },
+    {
+        path: ROUTES.SUPER_ADMIN_USERS,
+        view: () => import('../views/super-admin/UsersView.mjs'),
+        layout: 'SuperAdminLayout',
+        requiresAuth: true,
+        allowedRoles: ['SUPER_ADMIN']
+    },
+    {
+        path: ROUTES.SUPER_ADMIN_REPORTS,
+        view: () => import('../views/super-admin/ReportsView.mjs'),
         layout: 'SuperAdminLayout',
         requiresAuth: true,
         allowedRoles: ['SUPER_ADMIN']
@@ -83,6 +97,13 @@ export const routesConfig = [
         allowedRoles: ['CENTER_ADMIN']
     },
     {
+        path: ROUTES.CENTER_FORMS,
+        view: () => import('../views/center/FormsView.mjs'),
+        layout: 'CenterLayout',
+        requiresAuth: true,
+        allowedRoles: ['CENTER_ADMIN']
+    },
+    {
         path: ROUTES.ORG_DASHBOARD,
         view: () => import('../views/organization/DashboardView.mjs'),
         layout: 'OrganizationLayout',
@@ -104,17 +125,31 @@ export const routesConfig = [
         allowedRoles: ['ORG_ADMIN']
     },
     {
+        path: ROUTES.ORG_REPORTS,
+        view: () => import('../views/organization/ReportsView.mjs'),
+        layout: 'OrganizationLayout',
+        requiresAuth: true,
+        allowedRoles: ['ORG_ADMIN']
+    },
+    {
         path: ROUTES.USER_DASHBOARD,
         view: () => import('../views/user/DashboardView.mjs'),
         layout: 'UserLayout',
         requiresAuth: true,
-        allowedRoles: ['USER', 'ORG_ADMIN', 'SUPER_ADMIN']
+        allowedRoles: ['USER']
     },
     {
         path: ROUTES.USER_FORMS,
         view: () => import('../views/user/MyFormsView.mjs'),
         layout: 'UserLayout',
         requiresAuth: true,
-        allowedRoles: ['USER', 'ORG_ADMIN', 'SUPER_ADMIN']
+        allowedRoles: ['USER']
+    },
+    {
+        path: ROUTES.USER_PROFILE,
+        view: () => import('../views/user/ProfileView.mjs'),
+        layout: 'UserLayout',
+        requiresAuth: true,
+        allowedRoles: ['USER', 'ORG_ADMIN', 'CENTER_ADMIN', 'SUPER_ADMIN']
     }
 ];

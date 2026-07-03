@@ -45,13 +45,13 @@ export default class LandingView {
                             <div class="w-24 h-1 bg-surface-50"></div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-2 border-brand-800">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-2 border-brand-800 text-brand-400 ">
                             <!-- Feature 1 -->
                             <div class="p-10 border-b-2 md:border-b-0 md:border-r-2 border-brand-800 hover:bg-brand-900 transition-colors">
                                 <div class="w-12 h-12 border-2 border-surface-50 flex items-center justify-center mb-8">
                                     <span class="font-bold">01</span>
                                 </div>
-                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4">Dynamic Logic Engine</h3>
+                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4 text-brand-600 ">Dynamic Logic Engine</h3>
                                 <p class="text-brand-400 text-sm leading-relaxed">
                                     Build complex, conditional forms with zero code. Forms adapt instantly based on user input, ensuring precise data collection.
                                 </p>
@@ -62,7 +62,7 @@ export default class LandingView {
                                 <div class="w-12 h-12 border-2 border-surface-50 flex items-center justify-center mb-8">
                                     <span class="font-bold">02</span>
                                 </div>
-                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4">Strict Multi-Tenancy</h3>
+                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4 text-brand-600 ">Strict Multi-Tenancy</h3>
                                 <p class="text-brand-400 text-sm leading-relaxed">
                                     A rigid 4-tier RBAC architecture guarantees absolute data isolation between Centers, Organizations, and Users.
                                 </p>
@@ -73,7 +73,7 @@ export default class LandingView {
                                 <div class="w-12 h-12 border-2 border-surface-50 flex items-center justify-center mb-8">
                                     <span class="font-bold">03</span>
                                 </div>
-                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4">Data Autonomy</h3>
+                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4 text-brand-600 ">Data Autonomy</h3>
                                 <p class="text-brand-400 text-sm leading-relaxed">
                                     Export, analyze, and manage your isolated form submissions with enterprise-grade security and uncompromising speed.
                                 </p>

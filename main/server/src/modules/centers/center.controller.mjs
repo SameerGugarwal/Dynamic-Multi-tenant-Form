@@ -35,3 +35,32 @@ export const updateCenter = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getSettings = async (req, res, next) => {
+    try {
+        const centerId = req.user.centerId;
+        if (!centerId) return errorResponse(res, 400, 'User is not associated with a center');
+        const center = await centerService.getCenterById(centerId);
+        return successResponse(res, 200, 'Center settings fetched successfully', center);
+    } catch(error) {
+        next(error);
+    }
+};
+
+export const updateSettings = async (req, res, next) => {
+    try {
+        const centerId = req.user.centerId;
+        if (!centerId) return errorResponse(res, 400, 'User is not associated with a center');
+        
+        const updateData = {
+            name: req.body.name,
+            contactEmail: req.body.contactEmail,
+            defaultTimezone: req.body.defaultTimezone
+        };
+
+        const updatedCenter = await centerService.updateCenter(centerId, updateData);
+        return successResponse(res, 200, 'Center settings updated successfully', updatedCenter);
+    } catch(error) {
+        next(error);
+    }
+};

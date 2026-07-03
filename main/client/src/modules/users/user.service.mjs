@@ -15,6 +15,18 @@ export const UserService = {
     },
 
     /**
+     * Fetch users belonging to the current organization
+     */
+    async getOrgUsers() {
+        try {
+            return await http.get('/users/organization');
+        } catch (error) {
+            console.error('UserService.getOrgUsers Error:', error);
+            throw error;
+        }
+    },
+
+    /**
      * Create a new user
      * @param {Object} userData 
      */
@@ -23,6 +35,21 @@ export const UserService = {
             return await http.post('/users', userData);
         } catch (error) {
             console.error('UserService.createUser Error:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Update an existing user
+     * @param {String} userId 
+     * @param {Object} updateData 
+     */
+    async updateUser(userId, updateData) {
+        try {
+            // Using PATCH to match the backend route
+            return await http.patch(`/users/${userId}`, updateData);
+        } catch (error) {
+            console.error('UserService.updateUser Error:', error);
             throw error;
         }
     }

@@ -37,7 +37,9 @@ export const loginUser = async (email, password) => {
             id: user._id,
             name: user.name,
             email: user.email,
-            role: user.role?.name
+            role: user.role?.name,
+            centerName: user.centerId ? user.centerId.name : null,
+            organizationName: user.organizationId ? user.organizationId.name : null
         },
         accessToken,
         refreshToken

@@ -4,6 +4,10 @@ export const findCenterByName = async (name) => {
     return await Center.findOne({ name });
 };
 
+export const findCenterById = async (id) => {
+    return await Center.findById(id);
+};
+
 export const createCenter = async (centerData) => {
     return await Center.create(centerData);
 };

@@ -1,1 +1,0 @@
-export const USERS_CONSTANTS = { DEFAULT_LIMIT: 20 };

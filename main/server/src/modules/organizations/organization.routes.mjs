@@ -77,7 +77,7 @@ router.get('/my-center', authorizeRoles('Center Admin'), getOrg, getCenterOrgs);
  */
 router.get('/', authorizeRoles('Super Admin'), getAllOrgs);
 
-router.patch('/:id', authorizeRoles('Super Admin'), updateOrganization);
+router.patch('/:id', authorizeRoles('Super Admin', 'Center Admin'), updateOrganization);
 router.get('/:id/info', authorizeRoles('Super Admin', 'Center Admin'), getOrganizationInfo);
 
 export default router;

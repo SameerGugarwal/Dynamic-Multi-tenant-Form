@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const centerSchema = z.object({
     body: z.object({
         name: z.string().min(2, 'Name must be at least 2 characters'),
-        contactEmail: z.string().email('Valid contact email is required')
+        contactEmail: z.string().email('Valid contact email is required'),
+        location: z.string().min(2, 'Location is required')
     })
 });

@@ -22,19 +22,25 @@ export const generateExcel = async (submission, user, form) => {
     // Formatting Metadata Sheet
     metaSheet.getRow(1).font = { bold: true };
 
-    // Add Answers Sheet
-    const answersSheet = workbook.addWorksheet('Answers');
-    answersSheet.columns = [
-        { header: 'Question', key: 'question', width: 50 },
-        { header: 'Answer', key: 'answer', width: 50 }
-    ];
+    // Add a blank row
+    metaSheet.addRow({});
+    
+    // Add Answers Header
+    metaSheet.addRow({ property: 'ANSWERS', value: '' });
+    metaSheet.getRow(metaSheet.rowCount).font = { bold: true };
+    metaSheet.addRow({ property: 'Question', value: 'Answer' });
+    metaSheet.getRow(metaSheet.rowCount).font = { bold: true, underline: true };
 
     if (submission.answers && Array.isArray(submission.answers)) {
         // Map questions by ID for easy lookup
         const questionMap = {};
-        if (form && form.questions) {
-            form.questions.forEach(q => {
-                questionMap[q._id.toString()] = q.label;
+        if (form && form.sections) {
+            form.sections.forEach(sec => {
+                if (sec.questions && Array.isArray(sec.questions)) {
+                    sec.questions.forEach(q => {
+                        if (q.id) questionMap[q.id.toString()] = q.text || q.label || 'Untitled Question';
+                    });
+                }
             });
         }
 
@@ -44,14 +50,12 @@ export const generateExcel = async (submission, user, form) => {
             // Handle arrays (like checkbox answers)
             if (Array.isArray(value)) value = value.join(', ');
             
-            answersSheet.addRow({
-                question: label,
-                answer: value
+            metaSheet.addRow({
+                property: label,
+                value: value
             });
         });
     }
-
-    answersSheet.getRow(1).font = { bold: true };
 
     // Write to buffer
     const buffer = await workbook.xlsx.writeBuffer();

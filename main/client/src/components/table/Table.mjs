@@ -23,19 +23,19 @@ export class Table {
                 ${header}
             </th>
         `).join('');
-
+          
         const rowsHtml = this.rows.map((row, index) => {
             const isLastRow = index === this.rows.length - 1;
             const rowBorder = isLastRow ? '' : 'border-b-2 border-surface-900';
-            
+
             const cellsHtml = Object.values(row).map(cell => `
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-surface-900 border-r-2 last:border-r-0 border-surface-900">
                     ${cell}
                 </td>
-            `).join('');
+                `).join('');
 
-            return `
-                <tr class="${rowBorder} hover:bg-brand-100 transition-colors cursor-pointer group">
+            return ` 
+            <tr class="${rowBorder} hover:bg-brand-100 transition-colors cursor-pointer group">
                     ${cellsHtml}
                 </tr>
             `;
@@ -54,6 +54,6 @@ export class Table {
                     </tbody>
                 </table>
             </div>
-        `;
+        `;    
     }
 }

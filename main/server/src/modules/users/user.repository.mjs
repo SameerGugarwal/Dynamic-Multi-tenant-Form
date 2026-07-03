@@ -13,7 +13,7 @@ export const createUser = async (userData) => {
 };
 
 export const findUserByOrganization = async (organizationId) => {
-    return await User.findOne({ organization: organizationId }).populate('role', 'name');
+    return await User.find({ organizationId: organizationId }).populate('role', 'name');
 };
 
 export const findUserById = async (userId) => {
@@ -22,4 +22,8 @@ export const findUserById = async (userId) => {
 
 export const updateUserById = async (userId, updateData) => {
     return await User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true });
+};
+
+export const findAllUsers = async () => {
+    return await User.find({}).populate('role', 'name').populate('organizationId', 'name').populate('centerId', 'name').select('-passwordHash');
 };

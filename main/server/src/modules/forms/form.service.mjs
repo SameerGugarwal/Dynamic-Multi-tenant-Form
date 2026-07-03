@@ -20,7 +20,7 @@ export const getFormById = async (formId) => {
 //Deep Clone a Form AND its Questions
 export const cloneMasterForm = async (masterFormId, organizationId, userId) => {
     const masterForm = await formRepo.getFormById(masterFormId);
-    if(!masterForm || !masterForm.isMaster){
+    if(!masterForm || masterForm.clonedFromId !== null){
         throw new AppError('Invalid Master Form ID. Only Master templates can be cloned.', 400);
     }
     //Duplicate the Form Container 

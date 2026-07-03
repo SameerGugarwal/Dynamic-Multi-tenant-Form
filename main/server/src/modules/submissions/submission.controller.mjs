@@ -147,22 +147,42 @@ export const fetchFormSubmissions = async (req, res, next) => {
         const { formId } = req.params;
         const { status } = req.query;
         
-        let organizationId = req.user.organizationId;
+        let filter = {};
+        if (status) filter.status = status;
         
-        if (req.user.role.name === 'Super Admin') {
-            organizationId = req.query.organizationId;
-            if (!organizationId) {
-                throw new AppError("Super Admins must supply an organizationId query parameter.", 400);
+        const { default: Form } = await import('../../database/models/Form.model.mjs');
+        const form = await Form.findById(formId);
+        if (!form) throw new AppError("Form not found", 404);
+
+        if (form.isMaster || form.clonedFromId === null) {
+            const clones = await Form.find({ clonedFromId: form._id }).select('_id');
+            const cloneIds = clones.map(c => c._id);
+            // Include master form ID just in case it has direct submissions
+            cloneIds.push(form._id);
+            filter.formId = { $in: cloneIds };
+
+            if (req.user.role.name === 'Center Admin') {
+                const { default: Organization } = await import('../../database/models/Organization.model.mjs');
+                const orgs = await Organization.find({ centers: req.user.centerId }).select('_id');
+                filter.organizationId = { $in: orgs.map(o => o._id) };
+            } else if (req.user.role.name === 'Organization Admin') {
+                filter.organizationId = req.user.organizationId;
+            }
+        } else {
+            filter.formId = formId;
+            if (req.user.role.name !== 'Super Admin') {
+                if (req.user.role.name === 'Center Admin') {
+                    const { default: Organization } = await import('../../database/models/Organization.model.mjs');
+                    const orgs = await Organization.find({ centers: req.user.centerId }).select('_id');
+                    filter.organizationId = { $in: orgs.map(o => o._id) };
+                } else {
+                    filter.organizationId = req.user.organizationId;
+                }
             }
         }
 
         const paginationOptions = getPaginationOptions(req.query);
-        
-        const filter = { formId, organizationId };
-        if (status) filter.status = status;
-
         const { total, data } = await submissionService.getFormSubmissions(filter, paginationOptions);
-
         const meta = formatPagination(total, paginationOptions.page, paginationOptions.limit);
 
         return successResponse(res, 200, "Submissions profile compiled successfully", { list: data, pagination: meta });

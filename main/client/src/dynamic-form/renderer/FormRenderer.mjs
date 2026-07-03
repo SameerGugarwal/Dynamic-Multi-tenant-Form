@@ -174,11 +174,38 @@ export class FormRenderer {
         this.container.addEventListener('change', handleInteraction);
 
         // Submit Payload
-        this.container.querySelector('#submit-form-btn').addEventListener('click', async () => {
+        this.container.querySelector('#submit-form-btn').addEventListener('click', async (e) => {
+            const btn = e.target;
             if (this.validateForm()) {
-                console.log("FINAL SUBMISSION PAYLOAD: ", this.answers);
                 const { Toast } = await import('../../components/toast/Toast.mjs');
-                Toast.success('Form Submitted Successfully!');
+                const { default: http } = await import('../../services/http.mjs');
+                
+                try {
+                    btn.textContent = 'SUBMITTING...';
+                    btn.disabled = true;
+                    
+                    const answersArray = Object.keys(this.answers).map(qId => ({
+                        questionId: qId,
+                        value: this.answers[qId]
+                    }));
+                    
+                    const payload = {
+                        formId: this.schema._id,
+                        status: 'SUBMITTED',
+                        answers: answersArray
+                    };
+                    
+                    await http.post('/submissions', payload);
+                    
+                    Toast.success('Form Submitted Successfully!');
+                    
+                    // Dispatch event so the parent view can close the form and refresh the table
+                    this.container.dispatchEvent(new CustomEvent('submission-complete', { bubbles: true }));
+                } catch (err) {
+                    Toast.error('Failed to submit form: ' + err.message);
+                    btn.textContent = 'SUBMIT PAYLOAD';
+                    btn.disabled = false;
+                }
             }
         });
     }
@@ -200,10 +227,6 @@ export class FormRenderer {
                 qNode.classList.remove('hidden');
             } else {
                 qNode.classList.add('hidden');
-                // Optional: clear answer if hidden? 
-                // delete this.answers[id]; 
-                // e.target.value = '';
-                // Doing this requires re-evaluating the engine again, keeping it simple for now.
             }
         });
     }

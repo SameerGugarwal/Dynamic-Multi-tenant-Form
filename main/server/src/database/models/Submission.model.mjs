@@ -25,7 +25,7 @@ const SubmissionSchema = new Schema(
       default: 'DRAFT'
     },
     answers: [{
-      questionId: { type: Schema.Types.ObjectId, ref: 'Question' },
+      questionId: { type: String, required: true },
       value: Schema.Types.Mixed 
     }]
   },

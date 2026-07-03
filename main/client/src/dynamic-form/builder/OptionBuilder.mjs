@@ -7,32 +7,32 @@ export class OptionBuilder {
         const options = question.options || [];
         
         return `
-            <div class="pl-4 border-l-4 border-brand-500 mt-4 space-y-2 pb-2">
-                <p class="text-[10px] font-black uppercase tracking-widest text-brand-600 mb-2">OPTIONS CONFIGURATION</p>
-                <div class="space-y-2" id="options-list-${question.id}">
+            <div class="mt-6 bg-surface-50 border-2 border-surface-200 p-4 relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <label class="text-[10px] font-black uppercase tracking-widest text-brand-600 block mb-3">CHOICE OPTIONS CONFIGURATION</label>
+                <div class="space-y-3 mb-4" id="options-list-${question.id}">
                     ${options.map((opt, idx) => `
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 border-2 border-surface-900 ${question.type === 'radio' ? 'rounded-full' : ''}"></div>
+                        <div class="flex items-center gap-2 group/opt">
+                            <div class="w-4 h-4 border-2 border-surface-900 bg-white ${question.type === 'radio' ? 'rounded-full' : ''}"></div>
                             <input type="text" 
-                                class="option-input flex-1 border-b-2 border-surface-200 focus:border-brand-500 focus:outline-none text-sm py-1 bg-transparent"
+                                class="option-input flex-1 border-2 border-transparent focus:border-surface-900 px-2 py-1 text-sm font-bold focus:outline-none bg-white transition-colors shadow-sm focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                                 value="${opt}"
                                 data-section-id="${sectionId}"
                                 data-question-id="${question.id}"
                                 data-option-index="${idx}"
                             >
-                            <button class="remove-option-btn text-surface-400 hover:text-red-600 transition-colors"
+                            <button class="remove-option-btn w-7 h-7 bg-surface-200 text-surface-500 font-black text-xs hover:bg-red-500 hover:text-white transition-colors"
                                 data-section-id="${sectionId}"
                                 data-question-id="${question.id}"
                                 data-option-index="${idx}">
-                                &times;
+                                X
                             </button>
                         </div>
                     `).join('')}
                 </div>
-                <button class="add-option-btn text-[10px] font-black uppercase tracking-widest text-brand-500 hover:text-brand-700 mt-2" 
+                <button class="add-option-btn text-[10px] font-black uppercase tracking-widest border-2 border-surface-900 bg-white px-4 py-2 hover:bg-surface-900 hover:text-white transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)]" 
                     data-section-id="${sectionId}" 
                     data-question-id="${question.id}">
-                    + ADD OPTION
+                    + ADD NEW OPTION
                 </button>
             </div>
         `;
@@ -62,7 +62,7 @@ export class OptionBuilder {
         });
 
         container.querySelectorAll('.option-input').forEach(input => {
-            input.addEventListener('blur', (e) => {
+            input.addEventListener('change', (e) => {
                 const sId = e.target.dataset.sectionId;
                 const qId = e.target.dataset.questionId;
                 const idx = parseInt(e.target.dataset.optionIndex);

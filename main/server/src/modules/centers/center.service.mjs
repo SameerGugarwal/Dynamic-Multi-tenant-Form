@@ -10,6 +10,10 @@ export const createCenter = async (centerData) => {
     return await centerRepo.createCenter(centerData);
 };
 
+export const getCenterById = async (id) => {
+    return await centerRepo.findCenterById(id);
+};
+
 export const getAllCenters = async () => {
     return await centerRepo.findAllCenters();
 };

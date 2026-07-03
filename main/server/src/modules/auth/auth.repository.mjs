@@ -2,7 +2,10 @@ import User from '../../database/models/User.model.mjs';
 import Role from '../../database/models/Role.model.mjs';
 
 export const findUserByEmail = async (email) => {
-    return await User.findOne({ email }).populate('role');
+    return await User.findOne({ email })
+        .populate('role')
+        .populate('centerId')
+        .populate('organizationId');
 };
 
 export const findRoleByName = async (name) => {

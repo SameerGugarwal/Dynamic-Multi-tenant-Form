@@ -1,14 +1,13 @@
+// token manager
+import {ROLE_MAP} from '../constants/roles.mjs';
+
 const TOKEN_KEY = 'topo_access_token';
+
 export const TokenService ={
-    setToken(token){
-        localStorage.setItem(TOKEN_KEY, token);
-    },
-    getToken(){
-        return localStorage.getItem(TOKEN_KEY);
-    },
-    removeToken(){
-        localStorage.removeItem(TOKEN_KEY)
-    },
+    getToken: () => localStorage.getItem(TOKEN_KEY),
+    setToken: (token) => localStorage.setItem(TOKEN_KEY, token),
+    removeToken: () => localStorage.removeItem(TOKEN_KEY),
+    hasToken: () => !!localStorage.getItem(TOKEN_KEY),
 
     decodeToken() {
         const token = this.getToken();
@@ -48,8 +47,14 @@ export const TokenService ={
     },
     //Extract the user's role for our 4-Tier RBAC routing
     getUserRole(){
-        const decoded = this.decodeToken();
-        // The backend payload uses 'roleId', not 'role'
-        return decoded ? decoded.roleId : null; 
+        const decoded = this.decodeToken();    
+        if (!decoded) return null;   
+        const backendRole = decoded.role || decoded.roleId; 
+        
+        // If backend sends the full role object
+        if (typeof backendRole === 'object' && backendRole !== null) {
+            return ROLE_MAP[backendRole.name] || backendRole.name;
+        }
+        return ROLE_MAP[backendRole] || backendRole; 
     }
 };

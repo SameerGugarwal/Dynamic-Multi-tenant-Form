@@ -1,4 +1,5 @@
 import { Table } from '../../components/table/Table.mjs';
+import { Modal } from '../../components/modal/Modal.mjs';
 import { CenterService } from '../../modules/centers/center.service.mjs';
 import { Toast } from '../../components/toast/Toast.mjs';
 import http from '../../services/http.mjs';
@@ -13,7 +14,7 @@ export default class CentersView {
         this.container = container;
         this.renderSkeleton();
         
-        // Add Center Modal Toggle
+        // Add Center Inline Form Toggle
         this.container.querySelector('#add-center-btn').addEventListener('click', () => {
             this.container.querySelector('#center-form-container').classList.toggle('hidden');
         });
@@ -29,6 +30,7 @@ export default class CentersView {
             try {
                 await CenterService.createCenter(payload);
                 Toast.success('Center Created!');
+                document.getElementById('new-center-form').reset();
                 this.loadData();
             } catch(e) {
                 console.error(e);
@@ -36,55 +38,35 @@ export default class CentersView {
             }
         });
 
-        // Edit Center Form Submit
-        this.container.querySelector('#edit-center-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const centerId = document.getElementById('edit-center-id').value;
-            const payload = {
-                name: document.getElementById('ec-name').value,
-                isActive: document.getElementById('ec-status').value === 'ACTIVE'
-            };
-            try {
-                await CenterService.updateCenter(centerId, payload);
-                Toast.success('Center Updated!');
-                this.container.querySelector('#edit-modal-container').classList.add('hidden');
-                this.loadData();
-            } catch(e) {
-                console.error(e);
-                Toast.error('Failed to update center');
-            }
-        });
-
-        // Close Edit Modal
-        this.container.querySelector('#close-edit-modal').addEventListener('click', () => {
-            this.container.querySelector('#edit-modal-container').classList.add('hidden');
-        });
-
-        // Close View Orgs Modal
-        this.container.querySelector('#close-orgs-modal').addEventListener('click', () => {
-            this.container.querySelector('#view-orgs-modal-container').classList.add('hidden');
-        });
-        
         await this.loadData();
     }
 
     renderSkeleton() {
         this.container.innerHTML = `
-            <div class="animate-fade-in max-w-6xl mx-auto">
+            <div class="animate-fade-in max-w-6xl mx-auto pt-9">
                 <div class="flex justify-between items-end mb-8 border-b-2 border-surface-900 pb-4">
                     <div>
                         <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">CENTERS</h2>
                         <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">GLOBAL NODE MANAGEMENT</p>
                     </div>
-                    <button id="add-center-btn" class="bg-surface-900 text-white px-4 py-2 font-bold">+ ADD CENTER</button>
+                    <button id="add-center-btn" class="bg-surface-900 text-white px-4 py-2 font-bold hover:bg-surface-800 transition-colors">+ ADD CENTER</button>
                 </div>
-                
+
                 <div id="center-form-container" class="hidden mb-8 bg-surface-50 border-2 border-surface-900 p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <form id="new-center-form" class="flex gap-4 items-end">
-                        <div class="flex-1"><label class="text-xs font-bold block mb-1">Center Name</label><input type="text" id="nc-name" class="w-full border-2 p-2 border-surface-900" required></div>
-                        <div class="flex-1"><label class="text-xs font-bold block mb-1">Email</label><input type="email" id="nc-email" class="w-full border-2 p-2 border-surface-900" required></div>
-                        <div class="flex-1"><label class="text-xs font-bold block mb-1">Location</label><input type="text" id="nc-location" class="w-full border-2 p-2 border-surface-900" required></div>
-                        <button type="submit" class="bg-brand-500 text-white font-bold p-3 h-11">CREATE CENTER</button>
+                        <div class="flex-1">
+                            <label class="text-xs font-bold block mb-1">Center Name</label>
+                            <input type="text" id="nc-name" class="w-full border-2 p-2 border-surface-900 focus:ring-0 focus:border-brand-500" required>
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-xs font-bold block mb-1">Email</label>
+                            <input type="email" id="nc-email" class="w-full border-2 p-2 border-surface-900 focus:ring-0 focus:border-brand-500" required>
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-xs font-bold block mb-1">Location</label>
+                            <input type="text" id="nc-location" class="w-full border-2 p-2 border-surface-900 focus:ring-0 focus:border-brand-500" required>
+                        </div>
+                        <button type="submit" class="bg-brand-500 text-white font-bold px-6 h-11 hover:bg-brand-600 transition-colors uppercase tracking-widest">CREATE</button>
                     </form>
                 </div>
 
@@ -93,43 +75,6 @@ export default class CentersView {
                         <span class="text-surface-400 font-bold tracking-widest uppercase text-xs animate-pulse-soft">LOADING DATA...</span>
                     </div>
                 </div>
-
-                <!-- EDIT MODAL OVERLAY -->
-                <div id="edit-modal-container" class="hidden fixed inset-0 bg-surface-900 bg-opacity-75 flex items-center justify-center z-50">
-                    <div class="bg-surface-50 border-4 border-surface-900 p-8 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative">
-                        <button id="close-edit-modal" class="absolute top-4 right-4 text-surface-500 hover:text-surface-900 font-bold uppercase tracking-widest text-xs">CLOSE X</button>
-                        <h3 class="text-2xl font-black uppercase mb-6 border-b-2 border-surface-900 pb-2">EDIT CENTER</h3>
-                        <form id="edit-center-form" class="space-y-4">
-                            <input type="hidden" id="edit-center-id">
-                            <div>
-                                <label class="text-xs font-bold block mb-1 ">Center Name</label>
-                                <input type="text" id="ec-name" class="w-full border-2 p-3 border-surface-900" required>
-                            </div>
-                            <div>
-                                <label class="text-xs font-bold block mb-1">Status</label>
-                                <select id="ec-status" class="w-full border-2 p-3 border-surface-900 font-bold" required>
-                                    <option value="ACTIVE">ACTIVE</option>
-                                    <option value="INACTIVE">INACTIVE</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="w-full bg-brand-500 text-white font-black p-4 mt-4 uppercase tracking-widest hover:bg-brand-600 transition-colors">SAVE CHANGES</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- VIEW ORGS MODAL OVERLAY -->
-                <div id="view-orgs-modal-container" class="hidden fixed inset-0 bg-surface-900 bg-opacity-75 flex items-center justify-center z-50">
-                    <div class="bg-surface-50 border-4 border-surface-900 p-8 max-w-2xl w-full shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative max-h-[80vh] flex flex-col">
-                        <button id="close-orgs-modal" class="absolute top-4 right-4 text-surface-500 hover:text-surface-900 font-bold uppercase tracking-widest text-xs">CLOSE X</button>
-                        <h3 class="text-2xl font-black uppercase mb-2 border-b-2 border-surface-900 pb-2">ORGANIZATIONS</h3>
-                        <p id="view-orgs-subtitle" class="text-xs font-bold uppercase tracking-widest text-surface-500 mb-6">LOADING...</p>
-                        
-                        <div class="overflow-y-auto flex-1 border-2 border-surface-200 p-4 bg-white text-decoration-none" id="orgs-list-container">
-                            <!-- Orgs render here -->
-                        </div>
-                    </div>
-                </div>
-
             </div>
         `;
     }
@@ -137,6 +82,7 @@ export default class CentersView {
     async loadData() {
         try {
             const response = await CenterService.getCenters();
+            // Handle edge cases where the API might return differently shaped data
             const rawData = response.data || response || [];
             this.centers = Array.isArray(rawData) ? rawData : (rawData.data || []);
             
@@ -144,66 +90,99 @@ export default class CentersView {
             
             const rows = this.centers.map(center => ({
                 id: center.id || center._id || 'N/A',
-                name: `<button class="view-orgs-btn font-bold uppercase tracking-widest text-brand-500 hover:text-brand-700 underline transition-colors text-decoration-none" data-id="${center._id}" data-name="${center.name}">${center.name}</button>`,
+                name: `<button class="view-orgs-btn font-bold uppercase tracking-widest text-brand-500 hover:text-brand-700 underline transition-colors" data-id="${center._id}" data-name="${center.name}">${center.name}</button>`,
                 location: center.location || 'Unknown',
                 status: center.isActive !== false
                     ? '<span class="text-green-600 font-bold uppercase text-xs tracking-widest">ACTIVE</span>' 
-                    : '<span class="text-red-600 font-bold uppercase text-xs tracking-widest">INACTIVE</span>',
-                actions: `<button class="edit-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-brand-500 transition-colors text-decoration-none" data-id="${center._id}" data-name="${center.name}" data-active="${center.isActive !== false}">EDIT</button>`
+                    : '<span class="text-surface-400 font-bold uppercase text-xs tracking-widest">INACTIVE</span>',
+                actions: `<button class="edit-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-brand-500 transition-colors" data-id="${center._id}" data-name="${center.name}" data-active="${center.isActive !== false}">EDIT</button>`
             }));
 
+            // Re-render the Table
             const table = new Table(headers, rows);
             this.container.querySelector('#table-container').innerHTML = table.render();
 
-            // Bind Edit Buttons
+            // Bind Edit Modal for each row
             this.container.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
                     const name = e.target.dataset.name;
                     const isActive = e.target.dataset.active === 'true';
                     
-                    document.getElementById('edit-center-id').value = id;
-                    document.getElementById('ec-name').value = name;
-                    document.getElementById('ec-status').value = isActive ? 'ACTIVE' : 'INACTIVE';
+                    const bodyHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold block mb-1">Center Name</label>
+                                <input type="text" id="ec-name" class="w-full border-2 p-3 border-surface-900 font-bold" value="${name}">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold block mb-1">Status</label>
+                                <select id="ec-status" class="w-full border-2 p-3 border-surface-900 font-bold">
+                                    <option value="ACTIVE" ${isActive ? 'selected' : ''}>ACTIVE</option>
+                                    <option value="INACTIVE" ${!isActive ? 'selected' : ''}>INACTIVE</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+
+                    // Generate dynamic modal instance
+                    const editModal = new Modal('EDIT CENTER', bodyHTML, async () => {
+                        const payload = {
+                            name: document.getElementById('ec-name').value,
+                            isActive: document.getElementById('ec-status').value === 'ACTIVE'
+                        };
+                        try {
+                            await CenterService.updateCenter(id, payload);
+                            Toast.success('Center Updated!');
+                            this.loadData();
+                        } catch(err) {
+                            console.error(err);
+                            Toast.error('Failed to update center');
+                        }
+                    });
                     
-                    this.container.querySelector('#edit-modal-container').classList.remove('hidden');
+                    editModal.open();
                 });
             });
 
-            // Bind View Orgs Buttons
+            // Bind View Orgs Modal for each row
             this.container.querySelectorAll('.view-orgs-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     const id = e.target.dataset.id;
                     const name = e.target.dataset.name;
-                    
-                    const modal = this.container.querySelector('#view-orgs-modal-container');
-                    const subtitle = this.container.querySelector('#view-orgs-subtitle');
-                    const listContainer = this.container.querySelector('#orgs-list-container');
-                    
-                    subtitle.textContent = `CENTER: ${name}`;
-                    listContainer.innerHTML = '<p class="text-xs font-bold animate-pulse-soft">Loading organizations...</p>';
-                    modal.classList.remove('hidden');
                     
                     try {
                         const res = await http.get(`/organizations?centerId=${id}`);
                         const orgRaw = res.data || res || [];
                         const orgData = Array.isArray(orgRaw) ? orgRaw : (orgRaw.data || []);
                         
+                        let orgsHTML = '';
                         if (orgData.length === 0) {
-                            listContainer.innerHTML = '<p class="text-surface-500 font-bold uppercase text-xs">No organizations assigned to this center.</p>';
+                            orgsHTML = '<p class="text-surface-500 font-bold uppercase text-xs">No organizations assigned to this center.</p>';
                         } else {
-                            listContainer.innerHTML = orgData.map(org => `
+                            orgsHTML = orgData.map(org => `
                                 <div class="border-b-2 border-surface-200 pb-3 mb-3 last:border-0 last:mb-0 last:pb-0">
                                     <div class="font-black uppercase tracking-widest text-brand-600">${org.name}</div>
                                     <div class="text-xs font-bold text-surface-500">${org.contactEmail || 'No Email'}</div>
-                                    <div class="text-[10px] mt-1 uppercase tracking-widest ${org.isActive !== false ? 'text-green-600' : 'text-red-600'}">
+                                    <div class="text-[10px] mt-1 uppercase tracking-widest ${org.isActive !== false ? 'text-green-600' : 'text-surface-400'}">
                                         STATUS: ${org.isActive !== false ? 'ACTIVE' : 'INACTIVE'}
                                     </div>
                                 </div>
                             `).join('');
                         }
+
+                        const bodyHTML = `
+                            <div class="max-h-[50vh] overflow-y-auto p-2">
+                                ${orgsHTML}
+                            </div>
+                        `;
+
+                        // Passing 'null' as the third param because this modal is View-Only
+                        const viewModal = new Modal(`ORGS IN: ${name}`, bodyHTML, null);
+                        viewModal.open();
+
                     } catch(err) {
-                        listContainer.innerHTML = '<p class="text-red-600 font-bold uppercase text-xs">Failed to load organizations.</p>';
+                        Toast.error('Failed to load organizations.');
                     }
                 });
             });

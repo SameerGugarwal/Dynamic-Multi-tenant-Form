@@ -13,9 +13,10 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
-    "axios": "^1.17.0",
+    "axios": "^1.18.1",
     "dotenv": "^17.4.2",
     "navigo": "^8.11.1",
+    "node": "^24.18.0",
     "sweetalert2": "^11.26.25",
     "tailwindcss": "^4.3.0"
   }

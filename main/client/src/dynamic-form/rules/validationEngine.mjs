@@ -1,42 +1,34 @@
-import { requiredValidator } from '../validators/requiredValidator.mjs';
-import { regexValidator } from '../validators/regexValidator.mjs';
-import { minValidator } from '../validators/minValidator.mjs';
-import { maxValidator } from '../validators/maxValidator.mjs';
-
 export const ValidationEngine = {
     /**
-     * Validates a single question's answer against all its rules
-     * @returns {string|null} - Returns an error message if invalid, or null if valid.
+     * Validates a single question against the user's answer
+     * @param {Object} question - The question schema
+     * @param {any} answer - The user's answer (string, array, etc)
+     * @returns {String|null} - Error message string, or null if valid
      */
     validateQuestion(question, answer) {
         // 1. Required Check
-        const reqError = requiredValidator(answer, question.required);
-        if (reqError) return reqError;
-
-        // Skip other validations if empty and not required
-        if (answer === undefined || answer === null || String(answer).trim() === '') {
-            return null;
-        }
-
-        // 2. Custom Validations (if the question schema defines an array of custom validations)
-        if (question.validations && Array.isArray(question.validations)) {
-            for (const rule of question.validations) {
-                let error = null;
-                switch (rule.type) {
-                    case 'regex':
-                        error = regexValidator(answer, rule.pattern, rule.message);
-                        break;
-                    case 'min':
-                        error = minValidator(answer, rule.value);
-                        break;
-                    case 'max':
-                        error = maxValidator(answer, rule.value);
-                        break;
-                }
-                if (error) return error; // Return first error encountered
+        if (question.required) {
+            if (answer === undefined || answer === null || answer === '') {
+                return 'THIS FIELD IS REQUIRED.';
+            }
+            if (Array.isArray(answer) && answer.length === 0) {
+                return 'PLEASE SELECT AT LEAST ONE OPTION.';
             }
         }
 
-        return null; // Valid
+        // 2. Custom Validations (Regex, Min, Max) - To be expanded later
+        if (question.validations && question.validations.length > 0) {
+            for (const rule of question.validations) {
+                if (rule.type === 'minLength' && typeof answer === 'string' && answer.length < rule.value) {
+                    return `MUST BE AT LEAST ${rule.value} CHARACTERS.`;
+                }
+                if (rule.type === 'maxLength' && typeof answer === 'string' && answer.length > rule.value) {
+                    return `CANNOT EXCEED ${rule.value} CHARACTERS.`;
+                }
+            }
+        }
+
+        // Passed all checks
+        return null;
     }
 };

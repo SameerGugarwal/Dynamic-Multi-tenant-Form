@@ -1,42 +1,25 @@
+import { API_BASE_URL } from '../../constants/apiEndpoints.mjs';
+import { TokenService } from '../../services/token.service.mjs';
+
 export const ExcelService = {
-    /**
-     * Converts JSON data to CSV and triggers a download
-     * @param {Array<Object>} data 
-     * @param {string} filename 
-     */
-    exportToCSV(data, filename = 'export.csv') {
-        if (!data || !data.length) {
-            console.warn('No data to export.');
-            return;
-        }
-
-        // Extract headers
-        const headers = Object.keys(data[0]);
-        const csvRows = [];
-
-        // Add header row
-        csvRows.push(headers.join(','));
-
-        // Add data rows
-        for (const row of data) {
-            const values = headers.map(header => {
-                const escaped = ('' + row[header]).replace(/"/g, '\\"');
-                return `"${escaped}"`;
-            });
-            csvRows.push(values.join(','));
-        }
-
-        const csvString = csvRows.join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    downloadReport: async (submissionId) => {
+        const token = TokenService.getToken();
+        const url = `${API_BASE_URL}/reports/download/${submissionId}?format=excel`;
         
-        // Trigger download
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const res = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!res.ok) throw new Error('Failed to download Excel');
+        
+        const blob = await res.blob();
+        const objectUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = `report_${submissionId}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(objectUrl);
     }
 };

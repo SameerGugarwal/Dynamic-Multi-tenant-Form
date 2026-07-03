@@ -35,7 +35,7 @@ const updateDraftSchema = Joi.object({
 import { z } from 'zod';
 
 const answerItemSchema = z.object({
-  questionId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid questionId identifier format. Must be a 24-character hexadecimal ObjectId.'),
+  questionId: z.string().min(1, 'questionId cannot be empty'),
   value: z.any()
 });
 

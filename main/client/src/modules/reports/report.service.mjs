@@ -1,2 +1,7 @@
 import http from '../../services/http.mjs';
-export const reportsService = { async fetchAll() { return await http.get('/reports'); } };
+
+export const ReportService = {
+    getSubmissionsByForm: async (formId, params = {}) => {
+        return await http.get(`/submissions/form/${formId}`, { params });
+    }
+};

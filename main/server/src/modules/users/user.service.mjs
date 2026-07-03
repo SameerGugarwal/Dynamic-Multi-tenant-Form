@@ -26,8 +26,8 @@ export const createUser = async (userData) => {
         email,
         passwordHash: hashedPassword,
         role: role._id,
-        organization: organizationId || null,
-        center: centerId || null,
+        organizationId: organizationId || null,
+        centerId: centerId || null,
     });
     //Return user without the password hash
     const userResponse = newUser.toObject();
@@ -55,13 +55,27 @@ export const updateUser = async (userId, updateData) => {
             throw new AppError(`Role ${updateData.roleName} not found in Database.`, 404);
         }
         updateData.role = role._id;
+        
+        // RBAC Strict Enforcement: Clear assignments if moving to an incompatible role
+        if (updateData.roleName === 'Super Admin') {
+            updateData.centerId = null;
+            updateData.organizationId = null;
+        } else if (updateData.roleName === 'Center Admin') {
+            updateData.organizationId = null;
+        } else if (updateData.roleName === 'Organization Admin' || updateData.roleName === 'User') {
+            updateData.centerId = null;
+        }
         delete updateData.roleName;
     }
+
     // find by IDsn update
     const upadateUser = await userRepo.updateUserById(userId, updateData);
     if(!upadateUser){
         throw new AppError('User not found', 404);
     }
     return upadateUser;
+};
 
+export const getAllUsers = async () => {
+    return await userRepo.findAllUsers();
 };

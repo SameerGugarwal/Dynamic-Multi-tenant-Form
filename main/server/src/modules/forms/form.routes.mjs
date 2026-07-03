@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNewForm, fetchMasterForms, fetchMyOrgForms, cloneFormToOrg, updateFormDetails, deleteFormRecord, getFormRecord } from './form.controller.mjs';
+import { createNewForm, fetchMasterForms, fetchMyOrgForms, fetchAssignedForms, cloneFormToOrg, assignFormToOrg, updateFormDetails, deleteFormRecord, getFormRecord } from './form.controller.mjs';
 import { protect } from '../../middleware/auth.middleware.mjs';
 import { authorizeRoles } from '../../middleware/role.middleware.mjs';
 
@@ -49,14 +49,29 @@ router.get('/master',authorizeRoles('Organization Admin', 'Center Admin', 'Super
  *       200:
  *         description: Organization forms fetched successfully
  */
-router.get('/organization',authorizeRoles('Organization Admin', 'Center Admin'), fetchMyOrgForms);
+router.get('/organization',authorizeRoles('User', 'Organization Admin', 'Center Admin'), fetchMyOrgForms);
 
-//Deep Clone a Master Form
+// View Assigned Forms
+/**
+ * @swagger
+ * /forms/assigned:
+ *   get:
+ *     summary: Fetch master forms assigned to the organization
+ *     tags: [Forms]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Assigned forms fetched successfully
+ */
+router.get('/assigned', authorizeRoles('Organization Admin'), fetchAssignedForms);
+
+// Deep Clone a Master Form
 /**
  * @swagger
  * /forms/clone:
  *   post:
- *     summary: Deep clone a master form
+ *     summary: Deep clone a master form (Org Admin only)
  *     tags: [Forms]
  *     security:
  *       - bearerAuth: []
@@ -64,7 +79,22 @@ router.get('/organization',authorizeRoles('Organization Admin', 'Center Admin'),
  *       201:
  *         description: Form cloned successfully
  */
-router.post('/clone',authorizeRoles('Organization Admin', 'Center Admin'), cloneFormToOrg);
+router.post('/clone', authorizeRoles('Organization Admin'), cloneFormToOrg);
+
+// Assign a Master Form to an Org
+/**
+ * @swagger
+ * /forms/assign:
+ *   post:
+ *     summary: Assign a master form to an organization (Center Admin only)
+ *     tags: [Forms]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Form assigned successfully
+ */
+router.post('/assign', authorizeRoles('Center Admin'), assignFormToOrg);
 
 //Update a Form
 /**
@@ -113,7 +143,7 @@ router.put('/:id',authorizeRoles('Organization Admin', 'Center Admin'), deleteFo
  *       200:
  *         description: Form deleted successfully
  */
-router.get('/:id', authorizeRoles('Super Admin', 'Organization Admin', 'Center Admin'), getFormRecord);
-router.delete('/:id',authorizeRoles('Organization Admin', 'Center Admin'), deleteFormRecord);
+router.get('/:id', authorizeRoles('User', 'Super Admin', 'Organization Admin', 'Center Admin'), getFormRecord);
+router.delete('/:id',authorizeRoles('Super Admin', 'Organization Admin', 'Center Admin'), deleteFormRecord);
 
 export default router;
