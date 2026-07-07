@@ -48,13 +48,13 @@ export class Sidebar {
         const linksHtml = this.menuItems.map(item => {
             const isActive = currentPath === item.path || currentPath.startsWith(item.path + '/');
             const activeClasses = isActive
-                ? 'bg-surface-900 text-white' 
-                : 'text-surface-500 hover:bg-surface-100 hover:text-surface-900';
+                ? 'bg-brand-50 text-brand-700 font-semibold' 
+                : 'text-slate-500 hover:bg-surface-100 hover:text-slate-800 font-medium';
             
                 return `
                     <li>
-                        <a href="${item.path}" data-link class="flex items-center px-4 py-3 my-1 transition-colors text-sm uppercase tracking-widest font-bold ${activeClasses}">
-                            <span class="mr-3 font-bold opacity-70">/</span>
+                        <a href="${item.path}" data-link class="flex items-center px-4 py-2.5 my-1 transition-colors text-sm rounded-lg ${activeClasses}">
+                            <span class="mr-3 opacity-50">/</span>
                             <span>${item.name}</span>
                         </a>                    
                     </li>
@@ -64,12 +64,12 @@ export class Sidebar {
         const formattedRole = this.role ? this.role.replace('_', ' ') : 'GUEST';
 
         return `
-            <aside class="w-64 h-screen bg-white border-r-2 border-surface-900 text-surface-900 flex flex-col fixed left-0 top-0 z-40 animate-fade-in">
-                <div class="p-6 border-b-2 border-surface-900">
-                    <h2 class="text-2xl font-heading font-black text-surface-900 uppercase tracking-tighter">
-                        TOPO<br>FORMS.
+            <aside class="w-64 h-screen bg-white border-r border-surface-200 flex flex-col fixed left-0 top-0 z-40 animate-fade-in shadow-sm">
+                <div class="p-6 border-b border-surface-200">
+                    <h2 class="text-2xltext-brand-900">
+                        TopoForms
                     </h2>
-                    <p class="text-xs text-surface-500 mt-2 uppercase tracking-widest font-bold">${formattedRole}</p>
+                    <p class="text-xs text-slate-500 mt-1 font-medium uppercase tracking-wide">${formattedRole}</p>
                 </div>
                 
                 <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
@@ -78,8 +78,8 @@ export class Sidebar {
                     </ul>
                 </nav>
 
-                <div class="p-4 border-t-2 border-surface-900">
-                    <button id="logout-btn" class="w-full flex items-center justify-center px-4 py-3 text-xs font-bold uppercase tracking-widest text-surface-900 border-2 border-surface-900 hover:bg-surface-900 hover:text-white transition-colors">
+                <div class="p-4 border-t border-surface-200">
+                    <button id="logout-btn" class="w-full flex items-center justify-center px-4 py-2.5 text-sm font-medium text-slate-600 bg-surface-50 hover:bg-surface-100 border border-surface-200 rounded-lg transition-colors">
                         Sign Out
                     </button>
                 </div>

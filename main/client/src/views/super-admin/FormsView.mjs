@@ -23,7 +23,7 @@ export default class FormsView {
                 <div class="space-y-4">
                     <div>
                         <label class="text-xs font-bold block mb-1">Form Title</label>
-                        <input type="text" id="nf-title" class="w-full border-2 p-3 border-surface-900 font-bold" required>
+                        <input type="text" id="nf-title" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all shadow-sm" required>
                     </div>
                 </div>
             `;
@@ -54,24 +54,24 @@ export default class FormsView {
     renderSkeleton() {
         this.container.innerHTML = `
             <div class="animate-fade-in max-w-6xl mx-auto pt-9">
-                <div class="flex justify-between items-end mb-8 border-b-2 border-surface-900 pb-4">
+                <div class="flex justify-between items-end mb-8 border-b border-surface-200 pb-4">
                     <div>
-                        <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">GLOBAL FORMS</h2>
-                        <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">MASTER TEMPLATE MANAGEMENT</p>
+                        <h2 class="text-4xltext-brand-900 uppercase tracking-tighter">GLOBAL FORMS</h2>
+                        <p class="text-slate-500 font-bold font-medium text-xs mt-2">MASTER TEMPLATE MANAGEMENT</p>
                     </div>
-                    <button id="add-form-btn" class="bg-surface-900 text-white px-4 py-2 font-bold hover:bg-surface-800 transition-colors">+ CREATE MASTER FORM</button>
+                    <button id="add-form-btn" class="bg-brand-700 text-white hover:bg-brand-800 transition-colors px-4 py-2 font-bold  transition-colors">+ CREATE MASTER FORM</button>
                 </div>
                 
                 <div id="table-container">
-                    <div class="h-64 border-2 border-surface-200 bg-surface-50 flex items-center justify-center">
+                    <div class="h-64 border border-surface-200 rounded-lg bg-surface-50 flex items-center justify-center">
                         <span class="text-surface-400 font-bold tracking-widest uppercase text-xs animate-pulse-soft">LOADING DATA...</span>
                     </div>
                 </div>
                 
                 <div id="builder-container" class="mt-12 hidden border-t-4 border-surface-900 pt-8 relative">
-                    <button id="close-builder-btn" class="absolute top-8 right-0 text-surface-500 hover:text-surface-900 font-bold uppercase tracking-widest text-xs">CLOSE BUILDER X</button>
-                    <h3 class="text-2xl font-black uppercase mb-4">FORM BUILDER</h3>
-                    <div id="form-builder-mount" class="bg-white border-2 border-surface-900 p-4"></div>
+                    <button id="close-builder-btn" class="absolute top-8 right-0 text-slate-500 hover:text-slate-800 font-bold font-medium text-xs">CLOSE BUILDER X</button>
+                    <h3 class="text-2xl font-semibold uppercase mb-4">FORM BUILDER</h3>
+                    <div id="form-builder-mount" class="bg-white border border-surface-200 rounded-xl shadow-sm p-4"></div>
                 </div>
             </div>
         `;
@@ -89,16 +89,16 @@ export default class FormsView {
                 const isPublic = f.visibility === 'PUBLIC';
                 return {
                     id: f._id || f.id || 'N/A',
-                    title: `<button class="preview-btn font-bold uppercase tracking-widest text-brand-500 hover:text-brand-700 underline transition-colors" data-id="${f._id}" data-title="${f.title}">${f.title}</button>`,
+                    title: `<button class="preview-btn font-bold font-medium text-brand-500 hover:text-brand-700 underline transition-colors" data-id="${f._id}" data-title="${f.title}">${f.title}</button>`,
                     visibility: `
-                        <select class="visibility-toggle text-xs font-bold p-1 border-2 border-surface-900 ${isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" data-id="${f._id}">
+                        <select class="visibility-toggle text-xs font-bold p-1 border border-surface-200 rounded-xl shadow-sm ${isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" data-id="${f._id}">
                             <option value="PRIVATE" ${!isPublic ? 'selected' : ''}>PRIVATE</option>
                             <option value="PUBLIC" ${isPublic ? 'selected' : ''}>PUBLIC</option>
                         </select>
                     `,
                     actions: `
-                        <button class="edit-schema-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-brand-500 transition-colors mr-4" data-id="${f._id}">EDIT SCHEMA</button>
-                        <button class="delete-btn text-xs font-black uppercase tracking-widest border-b-2 border-red-500 text-red-500 hover:text-red-700 transition-colors" data-id="${f._id}">DELETE</button>
+                        <button class="edit-schema-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-brand-500 transition-colors mr-4" data-id="${f._id}">EDIT SCHEMA</button>
+                        <button class="delete-btn text-xs font-medium tracking-wide border-b-2 border-red-500 text-red-500 hover:text-red-700 transition-colors" data-id="${f._id}">DELETE</button>
                     `
                 };
             });
@@ -209,8 +209,8 @@ export default class FormsView {
 
         } catch (e) {
             this.container.querySelector('#table-container').innerHTML = `
-                <div class="border-2 border-red-500 p-8 text-center bg-red-50">
-                    <p class="text-red-700 text-xs font-bold uppercase tracking-widest">Failed to load templates.</p>
+                <div class="border border-red-500 p-8 text-center bg-red-50">
+                    <p class="text-red-700 text-xs font-bold font-medium">Failed to load templates.</p>
                 </div>
             `;
         }

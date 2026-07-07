@@ -12,15 +12,15 @@ export default class FormsView {
     renderSkeleton() {
         return `
             <div class="animate-fade-in max-w-6xl mx-auto pt-9">
-                <div class="flex justify-between items-end mb-8 border-b-2 border-surface-900 pb-4">
+                <div class="flex justify-between items-end mb-8 border-b border-surface-200 pb-4">
                     <div>
-                        <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">ASSIGN MASTER FORMS</h2>
-                        <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">ASSIGN TEMPLATES TO YOUR ORGANIZATIONS</p>
+                        <h2 class="text-4xltext-brand-900 uppercase tracking-tighter">ASSIGN MASTER FORMS</h2>
+                        <p class="text-slate-500 font-bold font-medium text-xs mt-2">ASSIGN TEMPLATES TO YOUR ORGANIZATIONS</p>
                     </div>
                 </div>
                 
                 <div id="table-container">
-                    <div class="h-64 border-2 border-surface-200 bg-surface-50 flex items-center justify-center">
+                    <div class="h-64 border border-surface-200 rounded-lg bg-surface-50 flex items-center justify-center">
                         <span class="text-surface-400 font-bold tracking-widest uppercase text-xs animate-pulse-soft">LOADING DATA...</span>
                     </div>
                 </div>
@@ -42,9 +42,9 @@ export default class FormsView {
 
             if (orgs.length === 0) {
                 this.container.querySelector('#table-container').innerHTML = `
-                    <div class="border-2 border-surface-900 p-8 text-center bg-white flex flex-col items-center justify-center">
-                        <p class="text-surface-900 text-sm font-black uppercase tracking-widest">NO ORGANIZATIONS FOUND</p>
-                        <p class="text-surface-500 text-xs font-bold uppercase tracking-widest mt-2">You must add an organization to this center before assigning forms.</p>
+                    <div class="border border-surface-200 rounded-xl shadow-sm p-8 text-center bg-white flex flex-col items-center justify-center">
+                        <p class="text-slate-800 text-sm font-medium tracking-wide">NO ORGANIZATIONS FOUND</p>
+                        <p class="text-slate-500 text-xs font-bold font-medium mt-2">You must add an organization to this center before assigning forms.</p>
                     </div>
                 `;
                 return;
@@ -56,14 +56,14 @@ export default class FormsView {
             
             const rows = forms.map(form => {
                 return {
-                    title: `<span class="font-bold text-surface-900 uppercase tracking-widest">${form.title}</span>`,
+                    title: `<span class="font-bold text-slate-800 font-medium">${form.title}</span>`,
                     assignTo: `
-                        <select class="target-org-select text-xs font-bold p-2 border-2 border-surface-900 bg-surface-50 w-full" data-form="${form._id}">
+                        <select class="target-org-select text-xs font-bold p-2 border border-surface-200 rounded-xl shadow-sm bg-surface-50 w-full" data-form="${form._id}">
                             <option value="" disabled selected>Select Organization...</option>
                             ${orgOptions}
                         </select>
                     `,
-                    actions: `<button class="assign-btn text-xs font-black uppercase tracking-widest px-4 py-2 bg-brand-500 text-white border-2 border-surface-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-none transition-all" data-id="${form._id}">ASSIGN</button>`
+                    actions: `<button class="assign-btn text-xs font-medium tracking-wide px-4 py-2 bg-brand-700 text-white hover:bg-brand-800 border border-surface-200 rounded-xl shadow-sm shadow-sm  hover:shadow-none transition-all" data-id="${form._id}">ASSIGN</button>`
                 };
             });
 
@@ -98,8 +98,8 @@ export default class FormsView {
 
         } catch (e) {
             this.container.querySelector('#table-container').innerHTML = `
-                <div class="border-2 border-red-500 p-8 text-center bg-red-50">
-                    <p class="text-red-700 text-xs font-bold uppercase tracking-widest">Failed to load templates or organizations.</p>
+                <div class="border border-red-500 p-8 text-center bg-red-50">
+                    <p class="text-red-700 text-xs font-bold font-medium">Failed to load templates or organizations.</p>
                 </div>
             `;
         }

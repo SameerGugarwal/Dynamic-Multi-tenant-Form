@@ -12,15 +12,15 @@ export default class OrganizationsView {
     renderSkeleton() {
         return `
             <div class="animate-fade-in max-w-6xl mx-auto pt-9">
-                <div class="flex justify-between items-end mb-8 border-b-2 border-surface-900 pb-4">
+                <div class="flex justify-between items-end mb-8 border-b border-surface-200 pb-4">
                     <div>
-                        <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">MY ORGANIZATIONS</h2>
-                        <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">ORGANIZATIONS UNDER THIS CENTER</p>
+                        <h2 class="text-4xltext-brand-900 uppercase tracking-tighter">MY ORGANIZATIONS</h2>
+                        <p class="text-slate-500 font-bold font-medium text-xs mt-2">ORGANIZATIONS UNDER THIS CENTER</p>
                     </div>
                 </div>
                 
                 <div id="table-container">
-                    <div class="h-64 border-2 border-surface-200 bg-surface-50 flex items-center justify-center">
+                    <div class="h-64 border border-surface-200 rounded-lg bg-surface-50 flex items-center justify-center">
                         <span class="text-surface-400 font-bold tracking-widest uppercase text-xs animate-pulse-soft">LOADING DATA...</span>
                     </div>
                 </div>
@@ -40,10 +40,10 @@ export default class OrganizationsView {
             const rows = orgs.map(org => {
                 const isActive = org.isActive !== false;
                 return {
-                    name: `<span class="font-bold text-surface-900 uppercase tracking-widest">${org.name}</span>`,
+                    name: `<span class="font-bold text-slate-800 font-medium">${org.name}</span>`,
                     email: org.contactEmail || 'N/A',
                     status: `
-                        <button class="status-toggle text-xs font-black uppercase tracking-widest px-2 py-1 border-2 border-surface-900 ${isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" data-id="${org._id}" data-active="${isActive}">
+                        <button class="status-toggle text-xs font-medium tracking-wide px-2 py-1 border border-surface-200 rounded-xl shadow-sm ${isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" data-id="${org._id}" data-active="${isActive}">
                             ${isActive ? 'ACTIVE' : 'INACTIVE'}
                         </button>
                     `
@@ -69,8 +69,8 @@ export default class OrganizationsView {
             });
         } catch (e) {
             this.container.querySelector('#table-container').innerHTML = `
-                <div class="border-2 border-red-500 p-8 text-center bg-red-50">
-                    <p class="text-red-700 text-xs font-bold uppercase tracking-widest">Failed to load organizations.</p>
+                <div class="border border-red-500 p-8 text-center bg-red-50">
+                    <p class="text-red-700 text-xs font-bold font-medium">Failed to load organizations.</p>
                 </div>
             `;
         }

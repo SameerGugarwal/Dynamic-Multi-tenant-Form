@@ -17,58 +17,58 @@ export default class RegisterView {
 
     render() {
         return `
-            <div class="bg-white border-2 border-surface-900 p-10 shadow-[8px_8px_0px_#09090b] animate-fade-in w-full mt-10 mb-10">                                                                                                                                                                        
+            <div class="bg-white border border-surface-200 rounded-xl shadow-sm p-10 shadow-xl rounded-2xl animate-fade-in w-full mt-10 mb-10">                                                                                                                                                                        
                 <div class="mb-10 text-center">                                                                                                               
-                    <h1 class="text-3xl font-heading font-black text-surface-900 uppercase tracking-widest">Create Account</h1>                               
-                    <p class="text-surface-500 text-xs font-bold mt-2 uppercase tracking-widest">Join the platform</p>                                        
+                    <h1 class="text-3xltext-brand-900 font-medium">Create Account</h1>                               
+                    <p class="text-slate-500 text-xs font-bold mt-2 font-medium">Join the platform</p>                                        
                 </div>                                                                                                                                        
                                                                                                                                                                   
                 <form id="register-form" class="space-y-6">                                                                                                   
                     <div>                                                                                                                                     
-                        <label class="block text-xs font-black text-surface-900 uppercase tracking-widest mb-2" for="name">Full Name</label>                                              
+                        <label class="block text-xs font-semibold text-slate-800 font-medium mb-2" for="name">Full Name</label>                                              
                         <input                                                                                                                                
                             type="text"                                                                                                                       
                             id="name"                                                                                                                         
                             name="name"                                                                                                                       
                             required                                                                                                                          
-                            class="w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 text-surface-900 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                                     
+                            class="w-full px-4 py-3 border border-surface-200 rounded-xl shadow-sm bg-surface-50 text-slate-800 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                                     
                             placeholder="John Doe"                                                                                                            
                         >                                                                                                                                                             
                     </div>                                                                                                                                    
                                                                                                                                                                   
                     <div>                                                                                                                                     
-                        <label class="block text-xs font-black text-surface-900 uppercase tracking-widest mb-2" for="email">Email</label>                     
+                        <label class="block text-xs font-semibold text-slate-800 font-medium mb-2" for="email">Email</label>                     
                         <input                                                                                                                                
                             type="email"                                                                                                                      
                             id="email"                                                                                                                        
                             name="email"                                                                                                                  
                             required                                                                                                                          
-                            class="w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 text-surface-900 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                                     
+                            class="w-full px-4 py-3 border border-surface-200 rounded-xl shadow-sm bg-surface-50 text-slate-800 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                                     
                             placeholder="admin@example.com"                                                                                                   
                         >                                                                                                                                     
                     </div>                                                                                                                                    
                                                                                                                                                                   
                     <div class="grid grid-cols-2 gap-4">                                                                                                      
                         <div>                                                                                                                                 
-                            <label class="block text-xs font-black text-surface-900 uppercase tracking-widest mb-2" for="password">Password</label>           
+                            <label class="block text-xs font-semibold text-slate-800 font-medium mb-2" for="password">Password</label>           
                             <input                                                                                                                            
                                 type="password"                                                                                                               
                                 id="password"                                                                                                                 
                                 name="password"                                                                                                               
                                 required                                                                                                                      
-                                class="w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 text-surface-900 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                          
+                                class="w-full px-4 py-3 border border-surface-200 rounded-xl shadow-sm bg-surface-50 text-slate-800 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                          
                                 placeholder="••••••••"                                                                                                        
                             >                                                                                                                                 
                         </div>                                                                                                                                
         
                         <div>                                                                                                                                 
-                            <label class="block text-xs font-black text-surface-900 uppercase tracking-widest mb-2" for="confirm-password">Confirm</label>    
+                            <label class="block text-xs font-semibold text-slate-800 font-medium mb-2" for="confirm-password">Confirm</label>    
                             <input                                                                                                                            
                                 type="password"                                                                                                               
                                 id="confirm-password"                                                                                                         
                                 name="confirm-password"                                                                                                       
                                 required                                                                                                                      
-                                class="w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 text-surface-900 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                                                              placeholder="••••••••"                                                                                                        
+                                class="w-full px-4 py-3 border border-surface-200 rounded-xl shadow-sm bg-surface-50 text-slate-800 font-bold text-sm focus:outline-none focus:ring-0 focus:border-brand-500 transition-colors"                                                                                                                                              placeholder="••••••••"                                                                                                        
                             >                                                                                                                                 
                         </div>                                                                                                                                
                     
@@ -77,16 +77,16 @@ export default class RegisterView {
                     <button                                                                                                                                   
                         type="submit"                                                                                                                         
                         id="submit-btn"                                                                                                                       
-                        class="w-full py-4 mt-6 border-2 border-surface-900 bg-transparent text-surface-900 font-black uppercase tracking-widest text-sm hover:bg-surface-900 hover:text-white transition-colors">                                                                                                                                         
+                        class="w-full py-4 mt-6 border border-surface-200 rounded-xl shadow-sm bg-transparent text-slate-800 font-medium tracking-wide text-sm  hover:text-white transition-colors">                                                                                                                                         
                         REGISTER                                                                                                                              
                     </button>                                                                                                                                 
                 
                 </form>                                                                                                                                       
                                                                                                                                                                   
                 <div class="mt-6 text-center">                                                                                                                
-                    <p class="text-xs font-bold text-surface-500 uppercase tracking-widest">                                                                  
+                    <p class="text-xs font-bold text-slate-500 font-medium">                                                                  
                         Already have an account?                                                                                                              
-                        <a href="#" id="link-login" class="text-surface-900 hover:underline">Sign In</a>                                                      
+                        <a href="#" id="link-login" class="text-slate-800 hover:underline">Sign In</a>                                                      
                     </p>                                                                                                                                      
                 </div>                                                                                                                                        
             </div>                                                                                                                                            

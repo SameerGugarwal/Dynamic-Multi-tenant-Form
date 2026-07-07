@@ -29,11 +29,11 @@ export class FormRenderer {
 
     renderBase() {
         return `
-            <div class="max-w-4xl mx-auto p-8 bg-white border-2 border-surface-900 mb-20 animate-fade-in shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div class="max-w-4xl mx-auto mb-20 animate-fade-in bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 <!-- Header -->
-                <div class="mb-12 border-b-4 border-surface-900 pb-6">
-                    <h1 class="text-5xl font-heading font-black text-surface-900 uppercase tracking-tighter">${this.schema.title}</h1>
-                    ${this.schema.description ? `<p class="mt-4 text-brand-600 font-sans text-lg">${this.schema.description}</p>` : ''}
+                <div class="mb-6 border-b border-slate-100 pb-4">
+                    <h1 class="text-2xl font-semibold text-slate-800">${this.schema.title}</h1>
+                    ${this.schema.description ? `<p class="mt-2 text-brand-600 font-sans text-sm">${this.schema.description}</p>` : ''}
                 </div>
 
                 <!-- Sections -->
@@ -42,9 +42,9 @@ export class FormRenderer {
                 </div>
 
                 <!-- Footer Actions -->
-                <div class="mt-16 pt-8 border-t-2 border-surface-900 flex justify-end">
-                    <button id="submit-form-btn" class="bg-surface-900 text-white px-10 py-4 font-bold uppercase tracking-widest text-sm hover:bg-brand-600 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        SUBMIT PAYLOAD
+                <div class="mt-12 pt-6 border-t border-slate-100 flex justify-end">
+                    <button id="submit-form-btn" class="bg-brand-700 text-white px-8 py-2.5 font-medium text-sm rounded-lg hover:bg-brand-800 shadow-sm transition-colors">
+                        Submit Payload
                     </button>
                 </div>
             </div>
@@ -54,12 +54,11 @@ export class FormRenderer {
     renderSection(section, index) {
         return `
             <div class="form-section" data-section-id="${section.id}">
-                <div class="mb-6 flex items-center gap-4">
-                    <div class="w-10 h-10 bg-brand-500 flex items-center justify-center text-white font-black font-heading border-2 border-surface-900">${index + 1}</div>
-                    <h2 class="text-2xl font-heading font-black text-surface-900 uppercase tracking-widest">${section.title}</h2>
+                <div class="mb-4 flex items-center">
+                    <h2 class="text-lg font-medium text-brand-700">${section.title}</h2>
                 </div>
                 
-                <div class="pl-14 space-y-8">
+                <div class="pl-2 space-y-6">
                     ${section.questions.map(q => this.renderQuestion(q)).join('')}
                 </div>
             </div>
@@ -71,28 +70,29 @@ export class FormRenderer {
         
         return `
             <div class="form-question transition-all duration-300 overflow-hidden" data-question-id="${question.id}">
-                <label class="block text-sm font-bold text-surface-900 uppercase tracking-widest mb-3">
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">
                     ${question.text} ${isRequiredHtml}
                 </label>
                 ${this.renderInputType(question)}
-                <div class="error-msg text-red-600 text-xs font-bold uppercase tracking-widest mt-2 hidden"></div>
+                <div class="error-msg text-red-500 text-xs mt-1.5 hidden"></div>
             </div>
         `;
     }
 
     renderInputType(question) {
         const id = question.id;
+        const standardInputClass = "w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all shadow-sm";
         switch (question.type) {
             case 'text':
-                return `<input type="text" class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors" data-id="${id}" />`;
+                return `<input type="text" class="question-input ${standardInputClass}" data-id="${id}" />`;
             case 'textarea':
-                return `<textarea class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors min-h-25 resize-y" data-id="${id}"></textarea>`;
+                return `<textarea class="question-input ${standardInputClass} min-h-25 resize-y" data-id="${id}"></textarea>`;
             case 'dropdown':
                 const dropdownOpts = question.options && question.options.length > 0 ? question.options : ['Option A', 'Option B'];
                 const optsHtml = dropdownOpts.map(opt => `<option value="${opt}">${opt}</option>`).join('');
                 return `
-                    <select class="question-input w-full px-4 py-3 border-2 border-surface-900 bg-surface-50 focus:bg-white focus:outline-none focus:border-brand-500 transition-colors appearance-none cursor-pointer" data-id="${id}">
-                        <option value="" disabled selected>SELECT AN OPTION...</option>
+                    <select class="question-input ${standardInputClass} appearance-none cursor-pointer" data-id="${id}">
+                        <option value="" disabled selected>Select an option...</option>
                         ${optsHtml}
                     </select>
                 `;
@@ -102,11 +102,11 @@ export class FormRenderer {
                     <div class="space-y-2">
                         ${radioOpts.map(opt => `
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <div class="relative w-5 h-5 border-2 border-surface-900 bg-surface-50 flex items-center justify-center group-hover:border-brand-500">
+                                <div class="relative w-5 h-5 border border-slate-300 rounded-full bg-white flex items-center justify-center group-hover:border-brand-500 transition-colors shadow-sm">
                                     <input type="radio" name="${id}" value="${opt}" class="question-input sr-only" data-id="${id}" />
-                                    <div class="w-2.5 h-2.5 bg-brand-500 hidden radio-check"></div>
+                                    <div class="w-2.5 h-2.5 bg-brand-600 rounded-full hidden radio-check"></div>
                                 </div>
-                                <span class="text-sm font-bold text-surface-900">${opt}</span>
+                                <span class="text-sm font-medium text-slate-700">${opt}</span>
                             </label>
                         `).join('')}
                     </div>
@@ -117,17 +117,17 @@ export class FormRenderer {
                     <div class="space-y-2">
                         ${checkboxOpts.map(opt => `
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <div class="relative w-5 h-5 border-2 border-surface-900 bg-surface-50 flex items-center justify-center group-hover:border-brand-500">
+                                <div class="relative w-5 h-5 border border-slate-300 rounded bg-white flex items-center justify-center group-hover:border-brand-500 transition-colors shadow-sm">
                                     <input type="checkbox" name="${id}[]" value="${opt}" class="question-input sr-only" data-id="${id}" />
-                                    <div class="w-3 h-3 bg-brand-500 hidden checkbox-check"></div>
+                                    <div class="w-2.5 h-2.5 bg-brand-600 rounded-sm hidden checkbox-check"></div>
                                 </div>
-                                <span class="text-sm font-bold text-surface-900">${opt}</span>
+                                <span class="text-sm font-medium text-slate-700">${opt}</span>
                             </label>
                         `).join('')}
                     </div>
                 `;
             default:
-                return `<input type="text" class="question-input w-full px-4 py-3 border-2 border-surface-900" data-id="${id}" />`;
+                return `<input type="text" class="question-input ${standardInputClass}" data-id="${id}" />`;
         }
     }
 

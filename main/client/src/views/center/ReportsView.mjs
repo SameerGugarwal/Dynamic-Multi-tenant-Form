@@ -15,18 +15,18 @@ export default class ReportsView {
         this.container = container;
         this.container.innerHTML = `
             <div class="animate-fade-in max-w-6xl mx-auto pt-9 pb-32">
-                <div class="flex justify-between items-end mb-8 border-b-2 border-surface-900 pb-4">
+                <div class="flex justify-between items-end mb-8 border-b border-surface-200 pb-4">
                     <div>
-                        <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">CENTER REPORTS</h2>
-                        <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">ANALYTICS & SUBMISSION EXPORTS</p>
+                        <h2 class="text-4xltext-brand-900 uppercase tracking-tighter">CENTER REPORTS</h2>
+                        <p class="text-slate-500 font-bold font-medium text-xs mt-2">ANALYTICS & SUBMISSION EXPORTS</p>
                     </div>
                 </div>
 
                 <!-- Form Selector -->
-                <div class="bg-white border-2 border-surface-900 p-8 mb-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative">
-                    <div class="absolute -top-3 -left-3 bg-brand-500 text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 border-2 border-surface-900">FILTER</div>
-                    <label class="block text-xs font-black uppercase tracking-widest text-surface-900 mb-2">SELECT A FORM TO ANALYZE</label>
-                    <select id="form-selector" class="w-full border-2 border-surface-900 p-3 font-bold text-surface-900 focus:outline-none focus:border-brand-500">
+                <div class="bg-white border border-surface-200 rounded-xl shadow-sm p-8 mb-8 shadow-sm relative">
+                    <div class="absolute -top-3 -left-3 bg-brand-700 text-white hover:bg-brand-800 text-[10px] font-medium tracking-wide px-2 py-1 border border-surface-200 rounded-xl shadow-sm">FILTER</div>
+                    <label class="block text-xs font-medium tracking-wide text-slate-800 mb-2">SELECT A FORM TO ANALYZE</label>
+                    <select id="form-selector" class="w-full border border-surface-200 rounded-xl shadow-sm p-3 font-bold text-slate-800 focus:outline-none focus:border-brand-500">
                         <option value="">-- Select Form --</option>
                     </select>
                 </div>
@@ -71,7 +71,7 @@ export default class ReportsView {
 
     async loadSubmissions() {
         const tableContainer = this.container.querySelector('#submissions-table-container');
-        tableContainer.innerHTML = '<div class="p-8 text-center text-surface-500 font-bold tracking-widest text-xs animate-pulse-soft">LOADING DATA...</div>';
+        tableContainer.innerHTML = '<div class="p-8 text-center text-slate-500 font-bold tracking-widest text-xs animate-pulse-soft">LOADING DATA...</div>';
 
         try {
             const res = await ReportService.getSubmissionsByForm(this.selectedFormId);
@@ -79,19 +79,19 @@ export default class ReportsView {
             const submissions = Array.isArray(data) ? data : (data.list || data.data || []);
 
             if (submissions.length === 0) {
-                tableContainer.innerHTML = '<div class="p-8 text-center text-surface-500 font-bold uppercase tracking-widest text-xs border-2 border-surface-200">NO SUBMISSIONS FOUND FOR THIS FORM.</div>';
+                tableContainer.innerHTML = '<div class="p-8 text-center text-slate-500 font-bold font-medium text-xs border border-surface-200 rounded-lg">NO SUBMISSIONS FOUND FOR THIS FORM.</div>';
                 return;
             }
 
             const headers = ['ID', 'DATE', 'STATUS', 'EXPORTS'];
             const rows = submissions.map(sub => ({
-                id: `<span class="text-xs font-bold text-surface-500">${sub._id.slice(-6).toUpperCase()}</span>`,
-                date: `<span class="text-xs font-bold text-surface-900">${new Date(sub.createdAt).toLocaleDateString()}</span>`,
-                status: `<span class="text-[10px] font-black uppercase tracking-widest px-2 py-1 border-2 border-surface-900 ${sub.status === 'SUBMITTED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${sub.status || 'DRAFT'}</span>`,
+                id: `<span class="text-xs font-bold text-slate-500">${sub._id.slice(-6).toUpperCase()}</span>`,
+                date: `<span class="text-xs font-bold text-slate-800">${new Date(sub.createdAt).toLocaleDateString()}</span>`,
+                status: `<span class="text-[10px] font-medium tracking-wide px-2 py-1 border border-surface-200 rounded-xl shadow-sm ${sub.status === 'SUBMITTED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${sub.status || 'DRAFT'}</span>`,
                 exports: `
                     <div class="flex gap-4">
-                        <button class="download-pdf-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-red-600 transition-colors" data-id="${sub._id}">PDF</button>
-                        <button class="download-excel-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-green-600 transition-colors" data-id="${sub._id}">EXCEL</button>
+                        <button class="download-pdf-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-red-600 transition-colors" data-id="${sub._id}">PDF</button>
+                        <button class="download-excel-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-green-600 transition-colors" data-id="${sub._id}">EXCEL</button>
                     </div>
                 `
             }));
@@ -101,7 +101,7 @@ export default class ReportsView {
 
             this.bindDownloadEvents();
         } catch (err) {
-            tableContainer.innerHTML = '<div class="p-8 text-center text-red-500 font-bold uppercase tracking-widest text-xs border-2 border-surface-200">FAILED TO LOAD SUBMISSIONS.</div>';
+            tableContainer.innerHTML = '<div class="p-8 text-center text-red-500 font-bold font-medium text-xs border border-surface-200 rounded-lg">FAILED TO LOAD SUBMISSIONS.</div>';
         }
     }
 

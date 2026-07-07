@@ -11,38 +11,38 @@ export class Table {
     render() {
         if (!this.rows || this.rows.length === 0) {
             return `
-                <div class="border-2 border-surface-900 p-12 text-center bg-white flex flex-col items-center justify-center">
-                    <p class="text-surface-900 text-sm font-black uppercase tracking-widest">DATA NOT FOUND</p>
-                    <p class="text-surface-500 text-xs font-bold uppercase tracking-widest mt-2">No records match the current query.</p>
+                <div class="border border-surface-200 rounded-xl p-12 text-center bg-white shadow-sm flex flex-col items-center justify-center">
+                    <p class="text-slate-800 text-sm font-semibold">Data Not Found</p>
+                    <p class="text-slate-500 text-sm mt-1">No records match the current query.</p>
                 </div>
             `;
         }
 
         const headersHtml = this.headers.map(header => `
-            <th class="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-surface-900 border-b-2 border-r-2 last:border-r-0 border-surface-900 bg-surface-50">
+            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200 bg-slate-50/50">
                 ${header}
             </th>
         `).join('');
           
         const rowsHtml = this.rows.map((row, index) => {
             const isLastRow = index === this.rows.length - 1;
-            const rowBorder = isLastRow ? '' : 'border-b-2 border-surface-900';
+            const rowBorder = isLastRow ? '' : 'border-b border-slate-100';
 
             const cellsHtml = Object.values(row).map(cell => `
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-surface-900 border-r-2 last:border-r-0 border-surface-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">
                     ${cell}
                 </td>
                 `).join('');
 
             return ` 
-            <tr class="${rowBorder} hover:bg-brand-100 transition-colors cursor-pointer group">
+            <tr class="${rowBorder} hover:bg-slate-50 transition-colors cursor-pointer group">
                     ${cellsHtml}
                 </tr>
             `;
         }).join('');
 
         return `
-            <div class="overflow-x-auto border-2 border-surface-900 bg-white">
+            <div class="overflow-x-auto border border-surface-200 rounded-xl bg-white shadow-sm">
                 <table class="w-full border-collapse">
                     <thead>
                         <tr>

@@ -9,8 +9,8 @@ export class Toast {
             timer: 3000,
             timerProgressBar: true,
             customClass: {
-                popup: '!bg-white !rounded-none !border-2 !border-surface-900 !shadow-none',
-                title: '!text-surface-900 !font-sans !text-xs !font-bold !uppercase !tracking-widest',
+                popup: '!bg-white !rounded-xl !border !border-surface-200 !shadow-lg',
+                title: '!text-slate-800 !font-sans !text-sm !font-semibold',
             },
             didOpen: (toast) => {
                 toast.addEventListener('mouseenter', Swal.stopTimer);

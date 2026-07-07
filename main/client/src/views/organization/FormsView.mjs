@@ -14,27 +14,27 @@ export default class FormsView {
     render() {
         this.container.innerHTML = `
             <div class="animate-fade-in max-w-6xl mx-auto pt-9">
-                <div class="flex justify-between items-end mb-8 border-b-2 border-surface-900 pb-4">
+                <div class="flex justify-between items-end mb-8 border-b border-surface-200 pb-4">
                     <div>
-                        <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">ORGANIZATION FORMS</h2>
-                        <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">ASSIGNED TEMPLATES & LOCAL FORMS</p>
+                        <h2 class="text-4xltext-brand-900 uppercase tracking-tighter">ORGANIZATION FORMS</h2>
+                        <p class="text-slate-500 font-bold font-medium text-xs mt-2">ASSIGNED TEMPLATES & LOCAL FORMS</p>
                     </div>
                 </div>
 
 
 
                 <div class="mb-12">
-                    <h3 class="text-2xl font-black uppercase mb-4 tracking-tighter">ACTIVE LOCAL FORMS</h3>
-                    <p class="text-surface-500 font-bold uppercase tracking-widest text-[10px] mb-4">FORMS YOU HAVE CLONED AND PREPARED FOR YOUR USERS</p>
+                    <h3 class="text-2xl font-semibold uppercase mb-4 tracking-tighter">ACTIVE LOCAL FORMS</h3>
+                    <p class="text-slate-500 font-bold font-medium text-[10px] mb-4">FORMS YOU HAVE CLONED AND PREPARED FOR YOUR USERS</p>
                     <div id="local-table-container">
-                        <div class="h-32 border-2 border-surface-200 bg-surface-50 flex items-center justify-center">
+                        <div class="h-32 border border-surface-200 rounded-lg bg-surface-50 flex items-center justify-center">
                             <span class="text-surface-400 font-bold tracking-widest uppercase text-xs animate-pulse-soft">LOADING LOCAL FORMS...</span>
                         </div>
                     </div>
                 </div>
                 
                 <div id="builder-container" class="mt-12 hidden border-t-4 border-surface-900 pt-8">
-                    <h3 class="text-2xl font-black uppercase mb-4" id="builder-title">BUILDER PREVIEW</h3>
+                    <h3 class="text-2xl font-semibold uppercase mb-4" id="builder-title">BUILDER PREVIEW</h3>
                     <div id="form-builder-mount"></div>
                 </div>
             </div>
@@ -53,15 +53,15 @@ export default class FormsView {
             
             const localHeaders = ['FORM TITLE', 'STATUS', 'ACTIONS'];
             const localRows = localData.map(f => ({
-                title: `<span class="font-bold text-surface-900 uppercase tracking-widest">${f.title}</span>`,
-                status: `<span class="text-xs font-black uppercase tracking-widest px-2 py-1 border-2 border-surface-900 ${f.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${f.status || 'DRAFT'}</span>`,
+                title: `<span class="font-bold text-slate-800 font-medium">${f.title}</span>`,
+                status: `<span class="text-xs font-medium tracking-wide px-2 py-1 border border-surface-200 rounded-xl shadow-sm ${f.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${f.status || 'DRAFT'}</span>`,
                 actions: `
                     <div class="flex gap-4">
-                        <button class="toggle-status-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 ${f.status === 'PUBLISHED' ? 'hover:text-yellow-600' : 'hover:text-green-600'} transition-colors" data-id="${f._id}" data-current-status="${f.status || 'DRAFT'}">
+                        <button class="toggle-status-btn text-xs font-medium tracking-wide border-b border-surface-200 ${f.status === 'PUBLISHED' ? 'hover:text-yellow-600' : 'hover:text-green-600'} transition-colors" data-id="${f._id}" data-current-status="${f.status || 'DRAFT'}">
                             ${f.status === 'PUBLISHED' ? 'UNPUBLISH' : 'PUBLISH'}
                         </button>
-                        <button class="edit-local-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-brand-600 transition-colors" data-id="${f._id}">EDIT SCHEMA</button>
-                        <button class="delete-local-btn text-xs font-black uppercase tracking-widest border-b-2 border-surface-900 hover:text-red-600 transition-colors" data-id="${f._id}">DELETE</button>
+                        <button class="edit-local-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-brand-600 transition-colors" data-id="${f._id}">EDIT SCHEMA</button>
+                        <button class="delete-local-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-red-600 transition-colors" data-id="${f._id}">DELETE</button>
                     </div>
                 `
             }));

@@ -14,40 +14,40 @@ export default class DashboardView {
     renderSkeleton() {
         return `
             <div class="animate-fade-in w-full max-w-7xl mx-auto mt-9">
-                <div class="mb-12 border-b-2 border-surface-900 pb-4">
-                    <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">
+                <div class="mb-12 border-b border-surface-200 pb-4">
+                    <h2 class="text-4xltext-brand-900 uppercase tracking-tighter">
                         DASHBOARD
                     </h2>
-                    <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">
+                    <p class="text-slate-500 font-bold font-medium text-xs mt-2">
                         LIVE STATISTICS
                     </p>
                 </div>
                 <!-- Metrics Grid Skeleton (The gray pulsing boxes) -->  
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8" id="stats-grid">   
-                    <div class="h-32 bg-surface-100 border-2 border-surface-200 animate-pulse"></div>
-                    <div class="h-32 bg-surface-100 border-2 border-surface-200 animate-pulse"></div>       
-                    <div class="h-32 bg-surface-100 border-2 border-surface-200 animate-pulse"></div>      
-                    <div class="h-32 bg-surface-100 border-2 border-surface-200 animate-pulse"></div>     
+                    <div class="h-32 bg-surface-100 border border-surface-200 rounded-lg animate-pulse"></div>
+                    <div class="h-32 bg-surface-100 border border-surface-200 rounded-lg animate-pulse"></div>       
+                    <div class="h-32 bg-surface-100 border border-surface-200 rounded-lg animate-pulse"></div>      
+                    <div class="h-32 bg-surface-100 border border-surface-200 rounded-lg animate-pulse"></div>     
                 </div>
 
                 <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Placeholder for future charts or activity logs -->  
-                    <div class="h-64 border-2 border-surface-900 bg-white p-6 shadow-[8px_8px_0px_#09090b] ">
-                        <h2 class="text-xl font-heading font-black uppercase tracking-widest mb-4">
+                    <div class="h-64 border border-surface-200 rounded-xl shadow-sm bg-white p-6">
+                        <h2 class="text-xltext-brand-900 mb-4">
                             Recent Activity
                         </h2>  
                 
-                        <div class="flex items-center justify-center h-40 text-surface-400 font-bold text-xs uppercase tracking-widest">         
+                        <div class="flex items-center justify-center h-40 text-slate-400 font-medium text-sm">         
                             No Recent Activity Detected                                         
                         </div>  
                     </div>
-                    <div class="h-64 border-2 border-brand-900 bg-brand-50 p-6 shadow-[8px_8px_0px_#1e1b4b]">
-                        <h2 class="text-xl font-heading font-black uppercase tracking-widest text-brand-900 mb-4">
-                            System health
+                    <div class="h-64 border border-surface-200 bg-surface-50 p-6 rounded-xl shadow-sm">
+                        <h2 class="text-xl font-heading font-semibold text-brand-700 mb-4">
+                            System Health
                         </h2>
 
-                        <div class="flex items-center justify-center h-40 text-brand-400 font-bold text-xs uppercase tracking-widest">         
-                            ALL SYSTEMS OPERATIONAL                                      
+                        <div class="flex items-center justify-center h-40 text-brand-600 font-medium text-sm">         
+                            All Systems Operational                                      
                         </div> 
                     </div>
                 </div>
@@ -78,19 +78,19 @@ export default class DashboardView {
         const grid = this.container.querySelector('#stats-grid');
         // injecting the interactive hover cards
         grid.innerHTML = `
-            ${this.createMetricCard('CENTERS',stats.centers || 0, 'bg-white', 'text-surface- 900')}
-            ${this.createMetricCard('ORGANIZATIONS', stats.orgs || 0, 'bg-surface-900', 'text-white')}
-            ${this.createMetricCard('MASTER FORMS', stats.forms || 0, 'bg-white', 'text-surface-900')}
-            ${this.createMetricCard('SUBMISSIONS', stats.submissions || 0, 'bg-brand-600', 'text-white border-brand-900')}
+            ${this.createMetricCard('Centers',stats.centers || 0, 'bg-white', 'text-slate-800')}
+            ${this.createMetricCard('Organizations', stats.orgs || 0, 'bg-surface-50', 'text-brand-700')}
+            ${this.createMetricCard('Master Forms', stats.forms || 0, 'bg-white', 'text-slate-800')}
+            ${this.createMetricCard('Submissions', stats.submissions || 0, 'bg-brand-700', 'text-white')}
         `;
     }
     createMetricCard( title, value, bgClass, textClass){
         return`
-            <div class="${bgClass} border-2 border-surface-900 p-6 shadow-[4px_4px_0px_#09090b] hover:shadow-[8px_8px_0px_#09090b] hover:-translate-y-1 transition-all cursor-default">
-                <p class="${textClass} text-xs font-black uppercase tracking-widest opacity-80 mb-2">
+            <div class="${bgClass} border border-surface-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-all cursor-default">
+                <p class="${textClass} text-sm font-medium opacity-80 mb-2">
                     ${title}
                 </p>
-                <h3 class="${textClass} text-5xl font-heading font-black tracking-tighter ">
+                <h3 class="${textClass} text-5xl font-heading font-semibold tracking-tight">
                     ${value}
                 </h3>
             </div>

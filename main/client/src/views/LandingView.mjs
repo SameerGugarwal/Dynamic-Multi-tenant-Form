@@ -14,16 +14,16 @@ export default class LandingView {
         return `
             <div class="animate-fade-in w-full">
                 <!-- Hero Section -->
-                <section class="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden border-b-2 border-surface-900 bg-surface-50">
+                <section class="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-surface-200 bg-surface-50">
                     <!-- Subtle Topographical Background using CSS patterns -->
                     <div class="absolute inset-0 opacity-40 pointer-events-none" style="background-image: radial-gradient(circle at center, var(--color-brand-200) 1px, transparent 1px); background-size: 24px 24px;"></div>
                     
                     <div class="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
-                        <div class="inline-block border-2 border-surface-900 px-4 py-1 mb-8">
-                            <span class="text-xs font-bold uppercase tracking-widest text-surface-900">ENTERPRISE ARCHITECTURE</span>
+                        <div class="inline-block border border-surface-200 rounded-xl shadow-sm px-4 py-1 mb-8">
+                            <span class="text-xs font-bold font-medium text-slate-800">ENTERPRISE ARCHITECTURE</span>
                         </div>
                         
-                        <h1 class="text-[clamp(3rem,8vw,8rem)] font-heading font-black text-surface-900 uppercase tracking-tighter leading-[0.9] mb-8">
+                        <h1 class="text-[clamp(3rem,8vw,8rem)] font-heading font-semibold text-slate-800 uppercase tracking-tighter leading-[0.9] mb-8">
                             THE DIGITAL<br>FRONTIER
                         </h1>
                         
@@ -31,8 +31,8 @@ export default class LandingView {
                             A highly-scalable, multi-tenant dynamic form engine built strictly for performance, strict data isolation, and absolute control.
                         </p>
                         
-                        <button id="hero-cta-btn" class="px-10 py-5 border-2 border-surface-900 bg-surface-900 text-white font-bold uppercase tracking-widest text-sm hover:bg-transparent hover:text-surface-900 transition-colors animate-pulse-soft">
-                            GET STARTED
+                        <button id="hero-cta-btn" class="px-10 py-5 border border-transparent rounded-xl shadow-sm bg-brand-700 text-white font-medium text-sm hover:bg-brand-800 hover:shadow-md transition-all animate-pulse-soft">
+                            Get Started
                         </button>
                     </div>
                 </section>
@@ -41,17 +41,17 @@ export default class LandingView {
                 <section class="w-full bg-brand-950 text-surface-50 py-32">
                     <div class="max-w-7xl mx-auto px-6">
                         <div class="mb-20">
-                            <h2 class="text-4xl md:text-6xl font-heading font-black uppercase tracking-tighter mb-4">CORE SYSTEMS</h2>
-                            <div class="w-24 h-1 bg-surface-50"></div>
+                            <h2 class="text-4xl md:text-6xl font-heading font-semibold tracking-tight mb-4 text-white">Core Systems</h2>
+                            <div class="w-24 h-1 bg-brand-500"></div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-2 border-brand-800 text-brand-400 ">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-brand-800 text-brand-400 ">
                             <!-- Feature 1 -->
                             <div class="p-10 border-b-2 md:border-b-0 md:border-r-2 border-brand-800 hover:bg-brand-900 transition-colors">
-                                <div class="w-12 h-12 border-2 border-surface-50 flex items-center justify-center mb-8">
+                                <div class="w-12 h-12 border border-surface-50 flex items-center justify-center mb-8">
                                     <span class="font-bold">01</span>
                                 </div>
-                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4 text-brand-600 ">Dynamic Logic Engine</h3>
+                                <h3 class="text-xl font-heading font-medium tracking-wide mb-4 text-brand-600 ">Dynamic Logic Engine</h3>
                                 <p class="text-brand-400 text-sm leading-relaxed">
                                     Build complex, conditional forms with zero code. Forms adapt instantly based on user input, ensuring precise data collection.
                                 </p>
@@ -59,10 +59,10 @@ export default class LandingView {
 
                             <!-- Feature 2 -->
                             <div class="p-10 border-b-2 md:border-b-0 md:border-r-2 border-brand-800 hover:bg-brand-900 transition-colors">
-                                <div class="w-12 h-12 border-2 border-surface-50 flex items-center justify-center mb-8">
+                                <div class="w-12 h-12 border border-surface-50 flex items-center justify-center mb-8">
                                     <span class="font-bold">02</span>
                                 </div>
-                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4 text-brand-600 ">Strict Multi-Tenancy</h3>
+                                <h3 class="text-xl font-heading font-medium tracking-wide mb-4 text-brand-600 ">Strict Multi-Tenancy</h3>
                                 <p class="text-brand-400 text-sm leading-relaxed">
                                     A rigid 4-tier RBAC architecture guarantees absolute data isolation between Centers, Organizations, and Users.
                                 </p>
@@ -70,10 +70,10 @@ export default class LandingView {
 
                             <!-- Feature 3 -->
                             <div class="p-10 hover:bg-brand-900 transition-colors">
-                                <div class="w-12 h-12 border-2 border-surface-50 flex items-center justify-center mb-8">
+                                <div class="w-12 h-12 border border-surface-50 flex items-center justify-center mb-8">
                                     <span class="font-bold">03</span>
                                 </div>
-                                <h3 class="text-xl font-heading font-black uppercase tracking-widest mb-4 text-brand-600 ">Data Autonomy</h3>
+                                <h3 class="text-xl font-heading font-medium tracking-wide mb-4 text-brand-600 ">Data Autonomy</h3>
                                 <p class="text-brand-400 text-sm leading-relaxed">
                                     Export, analyze, and manage your isolated form submissions with enterprise-grade security and uncompromising speed.
                                 </p>
@@ -83,10 +83,10 @@ export default class LandingView {
                 </section>
 
                 <!-- Data / Trust Section -->
-                <section class="w-full bg-surface-50 py-32 border-b-2 border-surface-900">
+                <section class="w-full bg-surface-50 py-32 border-b border-surface-200">
                     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                         <div>
-                            <h2 class="text-5xl font-heading font-black uppercase tracking-tighter text-surface-900 mb-6">BUILT FOR SCALE</h2>
+                            <h2 class="text-5xl font-heading font-semibold tracking-tight text-slate-800 mb-6">BUILT FOR SCALE</h2>
                             <p class="text-brand-600 text-lg mb-8">
                                 We designed TOPO to handle massive data throughput across thousands of isolated organizations simultaneously.
                             </p>
@@ -94,20 +94,20 @@ export default class LandingView {
                         
                         <div class="grid grid-cols-2 gap-8">
                             <div>
-                                <p class="text-6xl font-heading font-black tracking-tighter text-surface-900 mb-2">4</p>
-                                <p class="text-xs font-bold uppercase tracking-widest text-surface-500">TIERS OF HIERARCHY</p>
+                                <p class="text-6xl font-heading font-semibold tracking-tighter text-brand-900 mb-2">4</p>
+                                <p class="text-xs font-medium text-slate-500">Tiers of Hierarchy</p>
                             </div>
                             <div>
-                                <p class="text-6xl font-heading font-black tracking-tighter text-surface-900 mb-2">100%</p>
-                                <p class="text-xs font-bold uppercase tracking-widest text-surface-500">DYNAMIC SCHEMAS</p>
+                                <p class="text-6xl font-heading font-semibold tracking-tighter text-brand-900 mb-2">100%</p>
+                                <p class="text-xs font-medium text-slate-500">Dynamic Schemas</p>
                             </div>
                             <div>
-                                <p class="text-6xl font-heading font-black tracking-tighter text-surface-900 mb-2">0</p>
-                                <p class="text-xs font-bold uppercase tracking-widest text-surface-500">DATA LEAKAGE</p>
+                                <p class="text-6xl font-heading font-semibold tracking-tighter text-brand-900 mb-2">0</p>
+                                <p class="text-xs font-medium text-slate-500">Data Leakage</p>
                             </div>
                             <div>
-                                <p class="text-6xl font-heading font-black tracking-tighter text-surface-900 mb-2">&infin;</p>
-                                <p class="text-xs font-bold uppercase tracking-widest text-surface-500">SCALABILITY</p>
+                                <p class="text-6xl font-heading font-semibold tracking-tighter text-brand-900 mb-2">&infin;</p>
+                                <p class="text-xs font-medium text-slate-500">Scalability</p>
                             </div>
                         </div>
                     </div>

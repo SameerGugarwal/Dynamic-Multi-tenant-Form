@@ -7,32 +7,32 @@ export class OptionBuilder {
         const options = question.options || [];
         
         return `
-            <div class="mt-6 bg-surface-50 border-2 border-surface-200 p-4 relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <label class="text-[10px] font-black uppercase tracking-widest text-brand-600 block mb-3">CHOICE OPTIONS CONFIGURATION</label>
+            <div class="mt-6 bg-surface-50 border border-surface-200 rounded-lg p-4 relative shadow-sm">
+                <label class="text-xs font-semibold text-brand-700 block mb-3">Choice Options Configuration</label>
                 <div class="space-y-3 mb-4" id="options-list-${question.id}">
                     ${options.map((opt, idx) => `
                         <div class="flex items-center gap-2 group/opt">
-                            <div class="w-4 h-4 border-2 border-surface-900 bg-white ${question.type === 'radio' ? 'rounded-full' : ''}"></div>
+                            <div class="w-4 h-4 border border-surface-300 bg-white ${question.type === 'radio' ? 'rounded-full' : 'rounded-sm'}"></div>
                             <input type="text" 
-                                class="option-input flex-1 border-2 border-transparent focus:border-surface-900 px-2 py-1 text-sm font-bold focus:outline-none bg-white transition-colors shadow-sm focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                class="option-input flex-1 border border-surface-200 rounded-md focus:border-brand-500 px-2 py-1 text-sm font-medium focus:outline-none bg-white transition-colors shadow-sm focus:ring-2 focus:ring-brand-500/20"
                                 value="${opt}"
                                 data-section-id="${sectionId}"
                                 data-question-id="${question.id}"
                                 data-option-index="${idx}"
                             >
-                            <button class="remove-option-btn w-7 h-7 bg-surface-200 text-surface-500 font-black text-xs hover:bg-red-500 hover:text-white transition-colors"
+                            <button class="remove-option-btn w-7 h-7 bg-surface-200 rounded-md text-surface-500 font-bold text-xs hover:bg-red-50 hover:text-red-600 transition-colors"
                                 data-section-id="${sectionId}"
                                 data-question-id="${question.id}"
                                 data-option-index="${idx}">
-                                X
+                                ✕
                             </button>
                         </div>
                     `).join('')}
                 </div>
-                <button class="add-option-btn text-[10px] font-black uppercase tracking-widest border-2 border-surface-900 bg-white px-4 py-2 hover:bg-surface-900 hover:text-white transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)]" 
+                <button class="add-option-btn text-sm font-medium border border-surface-200 rounded-lg bg-white px-4 py-2 hover:bg-surface-100 transition-colors shadow-sm text-slate-700" 
                     data-section-id="${sectionId}" 
                     data-question-id="${question.id}">
-                    + ADD NEW OPTION
+                    + Add New Option
                 </button>
             </div>
         `;

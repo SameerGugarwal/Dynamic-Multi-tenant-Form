@@ -1,9 +1,12 @@
 export default class AuthLayout {
     async mount( container, viewInstance){
-        container.className = 'min-h-screen bg-surface-50 font-sans text-surface-900 flex flex-col items-center justify-center';
+        container.className = 'min-h-screen bg-surface-50 flex items-center justify-center font-sans p-4';
         container.innerHTML = `
-            <!-- The auth views (Login/Register) will mount their cards inside this div -->          
-                <main id="auth-content" class=" max-w-md px-6 w-full"></main>   
+            <!-- The Modal Container -->
+            <div class="w-full max-w-md bg-white border border-surface-200 rounded-2xl p-10 relative z-10 shadow-xl">
+                <!-- We'll mount the Login/Register view inside this div -->
+                <div id="auth-content"></div>
+            </div>
         `;
         // Safely mount the view (LoginView or RegisterView) inside the container  
         if (viewInstance && typeof viewInstance.mount === 'function'){

@@ -46,25 +46,25 @@ export default class UsersView {
     renderSkeleton() {
         this.container.innerHTML = `
             <div class="animate-fade-in max-w-6xl mx-auto pt-9">
-                <div class="flex justify-between items-end mb-8 border-b-2 border-surface-900 pb-4">
+                <div class="flex justify-between items-end mb-8 border-b border-surface-200 pb-4">
                     <div>
-                        <h2 class="text-4xl font-heading font-black text-surface-900 uppercase tracking-tighter">USERS DIRECTORY</h2>
-                        <p class="text-surface-500 font-bold uppercase tracking-widest text-xs mt-2">SYSTEM-WIDE DIRECTORY</p>
+                        <h2 class="text-4xltext-brand-900 uppercase tracking-tighter">USERS DIRECTORY</h2>
+                        <p class="text-slate-500 font-bold font-medium text-xs mt-2">SYSTEM-WIDE DIRECTORY</p>
                     </div>
-                    <button id="add-user-btn" class="bg-surface-900 text-white px-4 py-2 font-bold hover:bg-brand-600 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">+ ADD USER</button>
+                    <button id="add-user-btn" class="bg-brand-700 text-white hover:bg-brand-800 transition-colors px-4 py-2 font-bold hover:bg-brand-800 transition-colors shadow-sm  hover:shadow-sm">+ ADD USER</button>
                 </div>
                 
-                <div id="user-form-container" class="hidden mb-8 bg-surface-50 border-2 border-surface-900 p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <div id="user-form-container" class="hidden mb-8 bg-surface-50 border border-surface-200 rounded-xl shadow-sm p-6 shadow-sm">
                     <form id="new-user-form" class="flex gap-4 items-end">
-                        <div class="flex-1"><label class="text-xs font-bold uppercase tracking-widest block mb-1">Name</label><input type="text" id="nu-name" class="w-full border-2 p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
-                        <div class="flex-1"><label class="text-xs font-bold uppercase tracking-widest block mb-1">Email</label><input type="email" id="nu-email" class="w-full border-2 p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
-                        <div class="flex-1"><label class="text-xs font-bold uppercase tracking-widest block mb-1">Password</label><input type="password" id="nu-pass" class="w-full border-2 p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
-                        <button type="submit" class="bg-brand-500 text-white font-black uppercase tracking-widest px-8 py-3 h-13 border-2 border-surface-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-none transition-all">CREATE</button>
+                        <div class="flex-1"><label class="text-xs font-bold font-medium block mb-1">Name</label><input type="text" id="nu-name" class="w-full border p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
+                        <div class="flex-1"><label class="text-xs font-bold font-medium block mb-1">Email</label><input type="email" id="nu-email" class="w-full border p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
+                        <div class="flex-1"><label class="text-xs font-bold font-medium block mb-1">Password</label><input type="password" id="nu-pass" class="w-full border p-3 border-surface-900 focus:outline-none focus:border-brand-500 font-bold" required></div>
+                        <button type="submit" class="bg-brand-700 text-white hover:bg-brand-800 font-medium tracking-wide px-8 py-3 h-13 border border-surface-200 rounded-xl shadow-sm shadow-sm  hover:shadow-none transition-all">CREATE</button>
                     </form>
                 </div>
 
                 <div id="table-container">
-                    <div class="h-64 border-2 border-surface-200 bg-surface-50 flex items-center justify-center">
+                    <div class="h-64 border border-surface-200 rounded-lg bg-surface-50 flex items-center justify-center">
                         <span class="text-surface-400 font-bold tracking-widest uppercase text-xs animate-pulse-soft">LOADING DATA...</span>
                     </div>
                 </div>
@@ -108,12 +108,12 @@ export default class UsersView {
                 return {
                     user: `
                         <div>
-                            <p class="font-bold text-surface-900 uppercase">${u.name}</p>
-                            <p class="text-xs text-surface-500">${u.email}</p>
+                            <p class="font-bold text-slate-800 uppercase">${u.name}</p>
+                            <p class="text-xs text-slate-500">${u.email}</p>
                         </div>
                     `,
                     role: `
-                        <select class="role-toggle text-xs font-bold p-1 border-2 border-surface-900 bg-surface-50" data-id="${u._id}" ${isCurrentUser ? 'disabled title="You cannot demote yourself"' : ''}>
+                        <select class="role-toggle text-xs font-bold p-1 border border-surface-200 rounded-xl shadow-sm bg-surface-50" data-id="${u._id}" ${isCurrentUser ? 'disabled title="You cannot demote yourself"' : ''}>
                             <option value="User" ${roleName === 'User' ? 'selected' : ''}>User</option>
                             <option value="Organization Admin" ${roleName === 'Organization Admin' ? 'selected' : ''}>Org Admin</option>
                             <option value="Center Admin" ${roleName === 'Center Admin' ? 'selected' : ''}>Center Admin</option>
@@ -122,27 +122,27 @@ export default class UsersView {
                     `,
                     center: roleName === 'Center Admin' 
                         ? `
-                            <select class="center-assign-toggle text-xs font-bold p-1 border-2 border-surface-900 bg-surface-50 w-full" data-id="${u._id}" ${isCurrentUser ? 'disabled' : ''}>
+                            <select class="center-assign-toggle text-xs font-bold p-1 border border-surface-200 rounded-xl shadow-sm bg-surface-50 w-full" data-id="${u._id}" ${isCurrentUser ? 'disabled' : ''}>
                                 <option value="">-- No Center --</option>
                                 ${centers.map(c => `<option value="${c._id}" ${centerId === c._id ? 'selected' : ''}>${c.name}</option>`).join('')}
                             </select>
                         `
-                        : `<span class="text-xs text-surface-400 font-bold uppercase tracking-widest">N/A</span>`,
+                        : `<span class="text-xs text-surface-400 font-bold font-medium">N/A</span>`,
                     organization: (roleName === 'Organization Admin' || roleName === 'User')
                         ? `
-                            <select class="org-assign-toggle text-xs font-bold p-1 border-2 border-surface-900 bg-surface-50 w-full" data-id="${u._id}" ${isCurrentUser ? 'disabled' : ''}>
+                            <select class="org-assign-toggle text-xs font-bold p-1 border border-surface-200 rounded-xl shadow-sm bg-surface-50 w-full" data-id="${u._id}" ${isCurrentUser ? 'disabled' : ''}>
                                 <option value="">-- No Organization --</option>
                                 ${orgs.map(o => `<option value="${o._id}" ${orgId === o._id ? 'selected' : ''}>${o.name}</option>`).join('')}
                             </select>
                         `
-                        : `<span class="text-xs text-surface-400 font-bold uppercase tracking-widest">N/A</span>`,
+                        : `<span class="text-xs text-surface-400 font-bold font-medium">N/A</span>`,
                     status: `
-                        <button class="status-toggle text-xs font-black uppercase tracking-widest px-2 py-1 border-2 border-surface-900 ${isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" data-id="${u._id}" data-active="${isActive}" ${isCurrentUser ? 'disabled title="You cannot deactivate yourself"' : ''}>
+                        <button class="status-toggle text-xs font-medium tracking-wide px-2 py-1 border border-surface-200 rounded-xl shadow-sm ${isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" data-id="${u._id}" data-active="${isActive}" ${isCurrentUser ? 'disabled title="You cannot deactivate yourself"' : ''}>
                             ${isActive ? 'ACTIVE' : 'INACTIVE'}
                         </button>
                     `,
                     actions: `
-                        <button class="reset-pwd-btn text-xs font-black text-brand-500 uppercase tracking-widest border-b-2 border-brand-500 hover:text-brand-700 hover:border-brand-700 transition-colors" data-id="${u._id}">RESET PWD</button>
+                        <button class="reset-pwd-btn text-xs font-semibold text-brand-500 font-medium border-b-2 border-brand-500 hover:text-brand-700 hover:border-brand-700 transition-colors" data-id="${u._id}">RESET PWD</button>
                     `
                 };
             });
@@ -234,8 +234,8 @@ export default class UsersView {
 
         } catch (e) {
             this.container.querySelector('#table-container').innerHTML = `
-                <div class="border-2 border-red-500 p-8 text-center bg-red-50">
-                    <p class="text-red-700 text-xs font-bold uppercase tracking-widest">Failed to load users.</p>
+                <div class="border border-red-500 p-8 text-center bg-red-50">
+                    <p class="text-red-700 text-xs font-bold font-medium">Failed to load users.</p>
                 </div>
             `;
         }

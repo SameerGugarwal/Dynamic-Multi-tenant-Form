@@ -4,26 +4,30 @@
     --font-sans: "Inter", system-ui, sans-serif;
   --font-heading: "Outfit", system-ui, sans-serif;
 
-  /* Brand Colors: Monochromatic Off-Black/Grey Palette (ABSOLUTELY NO PURPLE/INDIGO) */
-  --color-brand-50: #fafafa;
-  --color-brand-100: #f4f4f5;
-  --color-brand-200: #e4e4e7;
-  --color-brand-300: #d4d4d8;
-  --color-brand-400: #a1a1aa;
-  --color-brand-500: #71717a;
-  --color-brand-600: #52525b;
-  --color-brand-700: #3f3f46;
-  --color-brand-800: #27272a;
-  --color-brand-900: #18181b;
-  --color-brand-950: #09090b;
+  /* Brand Colors: Enovate-IT Corporate Blue Palette */
+  --color-brand-50: #eef4fc;
+  --color-brand-100: #e0ecf9;
+  --color-brand-200: #c6def5;
+  --color-brand-300: #9tc9ee;
+  --color-brand-400: #73ace5;
+  --color-brand-500: #518ddb;
+  --color-brand-600: #3a71ce;
+  --color-brand-700: #2357b1; /* Deep Corporate Blue */
+  --color-brand-800: #224b94;
+  --color-brand-900: #204176;
+  --color-brand-950: #162a4d;
 
   /* Premium Surface/Background Colors */
-  --color-surface-50: #ffffff;
-  --color-surface-100: #fafafa;
-  --color-surface-200: #f4f4f5;
-  --color-surface-300: #e4e4e7;
-  --color-surface-800: #27272a;
-  --color-surface-900: #09090b;
+  --color-surface-50: #f4f8fc; /* Soft Light Blue */
+  --color-surface-100: #f8fafc;
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #cbd5e1;
+  --color-surface-400: #94a3b8;
+  --color-surface-500: #64748b;
+  --color-surface-600: #475569;
+  --color-surface-700: #334155;
+  --color-surface-800: #1e293b;
+  --color-surface-900: #0f172a;
 
   /* Fluid Typography Variables (using CSS clamps for responsiveness) */
   --text-fluid-h1: clamp(2.5rem, 5vw + 1rem, 5rem);

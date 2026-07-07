@@ -10,21 +10,21 @@ export default class PublicLayout {
     async mount(container, viewInstance) {
         container.className = 'min-h-screen bg-surface- 50 font- sans text-surface-900 flex flex-col';
 
-        container.innerHTML = `                   
-                <!-- Top Navigation Bar -->           
-                <nav class="fixed top-0 w-full z-50 bg-surface-50/90 backdrop-blur-md border-b border-surface-200 transition-all duration-300">           
-                    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">            
-                        <!-- Brand/Logo -->           
-                        <div class="text-2xl font-heading font-black tracking-widest uppercase cursor-pointer" id="nav-logo">                             
-                            -TOPO                     
+        container.innerHTML = `
+                <!-- Ultra-minimalist Navbar -->
+                <nav class="fixed w-full bg-white/90 backdrop-blur-md z-50 border-b border-surface-200 transition-all duration-300">
+                    <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                        <!-- Logo -->
+                        <div id="nav-logo" class="text-2xltext-brand-900 cursor-pointer">
+                            TopoForms                     
                         </div>                        
                                                       
                         <!-- Actions -->              
                         <div class="flex items-center gap-6">                                             
-                            <button id="nav-login-btn" class="text-sm font-bold tracking-widest uppercase hover:text-brand-600 transition-colors">            
+                            <button id="nav-login-btn" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition-colors">            
                                 Login                 
                             </button>                 
-                            <button id="nav-register-btn" class="px-6 py-2.5 border-2 border-surface-900 text-sm font-bold tracking-widest uppercase hover:bg-surface-900 hover:text-white transition-colors">    
+                            <button id="nav-register-btn" class="px-6 py-2.5 bg-brand-700 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors shadow-sm">    
                                 Register              
                             </button>                 
                         </div>                        
@@ -35,13 +35,13 @@ export default class PublicLayout {
                 <main id="layout-content" class="w-full pt-20 flex-1"></main>                          
                                                       
                 <!-- Ultra-minimalist Footer -->      
-                <footer class="bg-brand-950 text-surface-50 py-12 border-t border-surface-900 mt-20">
+                <footer class="bg-slate-900 text-surface-50 py-12 mt-20">
                     <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
-                        <div class="text-xl font-heading font-black tracking-widest uppercase mb-4 md:mb-0">
-                            -TOPO
+                        <div class="text-xl font-heading font-semibold mb-4 md:mb-0">
+                            TopoForms
                         </div>
-                        <div class="text-brand-400 text-xs font-bold tracking-widest uppercase">       
-                            &copy; ${new Date().getFullYear()} TOPO SYSTEMS. ALL RIGHTS RESERVED.   
+                        <div class="text-slate-400 text-sm font-medium">       
+                            &copy; ${new Date().getFullYear()} ENOVATE-IT. ALL RIGHTS RESERVED.   
                         </div>
                     </div>
                 </footer>
