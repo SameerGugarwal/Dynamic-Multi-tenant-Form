@@ -88,8 +88,6 @@ router.get('/organization', authorizeRoles('Organization Admin'), getOrgUser);
  *       200:
  *         description: User updated successfully
  */
-router.patch('/:id', authorizeRoles('Organization Admin', 'Super Admin'), updateUser);
-
 router.patch('/me', protect, async (req, res) => {
     try {
         const User = (await import('../../database/models/User.model.mjs')).default;
@@ -97,6 +95,8 @@ router.patch('/me', protect, async (req, res) => {
         res.json({ success: true, message: 'Profile updated' });
     } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 });
+
+router.patch('/:id', authorizeRoles('Organization Admin', 'Super Admin'), updateUser);
 
 import { adminResetPassword } from './user.controller.mjs';
 
