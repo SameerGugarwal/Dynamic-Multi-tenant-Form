@@ -74,3 +74,12 @@ export const getOrganizationInfo = async (req, res, next) => {
         next(error);
     }
 };
+
+export const deleteOrganization = async (req, res, next) => {
+    try {
+        await organizationService.deleteOrganization(req.params.id);
+        return successResponse(res, 200, 'Organization deleted successfully');
+    } catch(error) {
+        next(error);
+    }
+};

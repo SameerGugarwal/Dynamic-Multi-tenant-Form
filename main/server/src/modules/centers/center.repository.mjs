@@ -19,3 +19,7 @@ export const findAllCenters = async () => {
 export const updateCenter = async (centerId, updateData) => {
     return await Center.findByIdAndUpdate(centerId, updateData, { new: true, runValidators: true });
 };
+
+export const deleteCenterById = async (id) => {
+    return await Center.findByIdAndDelete(id);
+};

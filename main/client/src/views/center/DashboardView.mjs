@@ -1,4 +1,6 @@
 import http from '../../services/http.mjs';
+import { router } from '../../router/router.mjs';
+import { ROUTES } from '../../constants/routes.mjs';
 
 export default class DashboardView {
     async mount(container) {
@@ -25,19 +27,30 @@ export default class DashboardView {
             console.log("Parsed Data:", data);
             
             this.container.querySelector('#stats-grid').innerHTML = `
-                <div class="border border-surface-200 rounded-xl shadow-sm bg-white p-6 shadow-sm">
+                <div data-route="${ROUTES.CENTER_ORGS}" class="metric-card border border-surface-200 rounded-xl shadow-sm bg-white p-6 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                     <div class="text-[10px] font-medium tracking-wide text-slate-500 mb-2">ORGANIZATIONS</div>
                     <div class="text-5xl font-heading font-semibold text-brand-600">${data.orgs || 0}</div>
                 </div>
-                <div class="border border-surface-200 rounded-xl shadow-sm bg-white p-6 shadow-sm">
+                <div data-route="${ROUTES.CENTER_FORMS}" class="metric-card border border-surface-200 rounded-xl shadow-sm bg-white p-6 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                     <div class="text-[10px] font-medium tracking-wide text-slate-500 mb-2">AVAILABLE TEMPLATES</div>
                     <div class="text-5xl font-heading font-semibold text-brand-600">${data.forms || 0}</div>
                 </div>
-                <div class="border border-surface-200 rounded-xl shadow-sm bg-white p-6 shadow-sm">
+                <div data-route="${ROUTES.CENTER_REPORTS}" class="metric-card border border-surface-200 rounded-xl shadow-sm bg-white p-6 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                     <div class="text-[10px] font-medium tracking-wide text-slate-500 mb-2">SUBMISSIONS</div>
                     <div class="text-5xl font-heading font-semibold text-red-600">${data.submissions || 0}</div>
                 </div>
             `;
+            
+            // Attach routing event listeners
+            const cards = this.container.querySelectorAll('.metric-card');
+            cards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const route = e.currentTarget.dataset.route;
+                    if (route) {
+                        router.navigate(route);
+                    }
+                });
+            });
         } catch (e) {
             this.container.querySelector('#stats-grid').innerHTML = '<div class="text-red-500 font-bold">Failed to load statistics.</div>';
         }

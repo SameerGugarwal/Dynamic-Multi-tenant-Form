@@ -1,15 +1,18 @@
+import Swal from 'sweetalert2';
+
 export class Modal {
     //storing every thing we need 
     constructor(title, bodyHTML, onConfirm) {
         this.title = title;
         this.bodyHTML = bodyHTML;
         this.onConfirm = onConfirm;
+        this.isDirty = false; // Track if the modal content has been modified
     }
     //Build and show the modal    
     open() {
         const overlay = document.createElement('div');
         overlay.id = 'modal-overlay';
-        overlay.className = 'fixed inset-0 z-[9998] flex items-center justify-center bg-black/50';
+        overlay.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/50';
 
         // Create the white modal box inside
         const modal = document.createElement('div');
@@ -43,19 +46,95 @@ export class Modal {
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
+        // 1. grab the modal body container
+        const modelBody = overlay.querySelector('#modal-body');
+        const confirmBtn = overlay.querySelector('#modal-confirm-btn');
+        
+        // Detect if this is a form modal (has inputs)
+        const hasInputs = modelBody.querySelectorAll('input, select, textarea').length > 0;
+        
+        if (hasInputs) {
+            confirmBtn.textContent = 'Close';
+        }
+
+        // 2. Listen for ANY typing or changes that bubble up 
+        modelBody.addEventListener('input', () => {
+            if(!this.isDirty){
+                this.isDirty = true;
+                if(hasInputs) confirmBtn.textContent = 'Save Changes';
+            }
+        });
+
+        modelBody.addEventListener('change', () => {
+            if(!this.isDirty){
+                this.isDirty = true;
+                if(hasInputs) confirmBtn.textContent = 'Save Changes';
+            }
+        });
+
         //Wire up all the close/confirm buttons
-        overlay.querySelector('#modal-close-btn').addEventListener('click', () => this.close());
+        overlay.querySelector('#modal-close-btn').addEventListener('click', () =>  this.handleClose());
+        overlay.addEventListener('click', (e) => {
+            if(e.target === overlay ) this.handleClose();
+        })
        
         
-        overlay.querySelector('#modal-confirm-btn').addEventListener('click', () =>{
-            if (this.onConfirm) this.onConfirm();
-            this.close();
-        });
-        // Close if user clicks the dark background
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) this.close();
+        confirmBtn.addEventListener('click', () => {
+            if (hasInputs) {
+                // If it's a form, only run onConfirm if changes were made
+                if (this.isDirty && this.onConfirm) {
+                    // If onConfirm resolves to `false`, keep the modal open (e.g. validation failed).
+                    // Any other value (including undefined) closes the modal as before.
+                    Promise.resolve(this.onConfirm()).then((result) => {
+                        if (result !== false) this.close();
+                    });
+                } else {
+                    // Nothing changed: just close (button reads "Close" in this state).
+                    this.close();
+                }
+            } else {
+                // For non-form modals (e.g. Delete confirmations), always run onConfirm
+                if (this.onConfirm) this.onConfirm();
+                this.close();
+            }
         });
     }
+
+    handleClose() {
+        if (this.isDirty) {
+            // terigger the asynchonous SweetAlert2
+            Swal.fire({
+                title: 'Unsaved Changes',
+                text: 'You have unsaved chages. Are you sure you want to discard them? ',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Save Changes',
+                denyButtonText: 'Discard',
+                cancelButtonText: 'Keep Editing',
+                confirmButtonColor: '#2357b1', // Enovate-IT Brand 
+                denyButtonColor: '#ef4444'
+            }).then((result)=> {
+                //User cliked save changes
+                if(result.isConfirmed){
+                    // Respect a `false` return (validation failed) and keep the modal open.
+                    if (this.onConfirm) {
+                        Promise.resolve(this.onConfirm()).then((r) => {
+                            if (r !== false) this.close();
+                        });
+                    } else {
+                        this.close();
+                    }
+                } else if(result.isDenied){
+                    //uesr clicked discard
+                    this.close();                    
+                }
+            });
+        } else{
+            this.close(); // safe to close 
+        }
+    }
+
 
     close(){
         const overlay = document.getElementById('modal-overlay');

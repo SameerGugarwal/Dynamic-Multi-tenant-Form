@@ -12,6 +12,7 @@ class FormStore {
             sections: [] 
         };
         this.listeners = [];
+        this.isDirty = false;
     }
     
     // subscribe to state changes 
@@ -35,6 +36,7 @@ class FormStore {
     // load an entier state object (existing forms ko edit karne me usefull hota he !!)
     loadState(newState){
         this.state = JSON.parse(JSON.stringify(newState));
+        this.isDirty = false;
         this.notify();
     }
     
@@ -42,6 +44,7 @@ class FormStore {
     updateMetadata(title, description){
         this.state.title = title;
         this.state.description = description;
+        this.isDirty = true;
         this.notify();
     }
     
@@ -55,6 +58,7 @@ class FormStore {
             questions: []
         };
         this.state.sections.push(newSection);
+        this.isDirty = true;
         this.notify();
     }
     
@@ -63,6 +67,7 @@ class FormStore {
         const sectionIndex = this.state.sections.findIndex(s => s.id === sectionId);
         if(sectionIndex !== -1){
             this.state.sections[sectionIndex] = {...this.state.sections[sectionIndex], ...updates};
+            this.isDirty = true;
             this.notify();
         }
     }
@@ -70,6 +75,7 @@ class FormStore {
     // remove an entier section 
     removeSection(sectionId){
         this.state.sections = this.state.sections.filter(s => s.id !== sectionId);
+        this.isDirty = true;
         this.notify();
     }
     
@@ -88,6 +94,7 @@ class FormStore {
                 visibilityRules: []            
             }; 
             section.questions.push(newQuestion);
+            this.isDirty = true;
             this.notify();
         }
     }
@@ -99,6 +106,7 @@ class FormStore {
             const questionIndex = section.questions.findIndex(q => q.id === questionId);
             if(questionIndex !== -1){
                 section.questions[questionIndex] = { ...section.questions[questionIndex], ...updates};
+                this.isDirty = true;
                 this.notify();
             }
         }
@@ -109,6 +117,7 @@ class FormStore {
         const section = this.state.sections.find(s => s.id === sectionId);
         if(section){
             section.questions = section.questions.filter(q => q.id !== questionId);
+            this.isDirty = true;
             this.notify();
         }
     }

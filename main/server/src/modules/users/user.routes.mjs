@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNewUser, getOrgUser, updateUser, getAllUsersController } from './user.controller.mjs';
+import { createNewUser, getOrgUser, updateUser, getAllUsersController, deleteUserController } from './user.controller.mjs';
 import { protect } from '../../middleware/auth.middleware.mjs';
 import { authorizeRoles } from '../../middleware/role.middleware.mjs';
 
@@ -97,6 +97,7 @@ router.patch('/me', protect, async (req, res) => {
 });
 
 router.patch('/:id', authorizeRoles('Organization Admin', 'Super Admin'), updateUser);
+router.delete('/:id', authorizeRoles('Super Admin'), deleteUserController);
 
 import { adminResetPassword } from './user.controller.mjs';
 

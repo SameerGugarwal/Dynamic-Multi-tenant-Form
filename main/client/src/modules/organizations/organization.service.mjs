@@ -31,6 +31,16 @@ export const OrganizationService = {
         }
     },
 
+    // Delete an organization (Cascading)
+    async deleteOrganization(orgId) {
+        try {
+            return await http.delete(`/organizations/${orgId}`);
+        } catch (error) {
+            console.error('OrganizationService.deleteOrganization Error:', error);
+            throw error;
+        }
+    },
+
     // Get info for an organization
     async getOrganizationInfo(orgId) {
         try {

@@ -44,6 +44,19 @@ export const CenterService = {
     },
 
     /**
+     * Delete a center (Cascading)
+     */
+    deleteCenter: async (id) => {
+        try {
+            const response = await http.delete(`/centers/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Failed to delete center ${id}:`, error);
+            throw error;
+        }
+    },
+
+    /**
      * Fetch settings for the Center Admin's own center
      */
     getSettings: async () => {

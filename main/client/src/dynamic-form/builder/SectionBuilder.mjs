@@ -46,27 +46,26 @@ export class SectionBuilder {
 
         // Section Title change
         container.querySelectorAll('.section-title-input').forEach(input => {
-            input.addEventListener('blur', (e) => {
+            input.onblur = (e) => {
                 const sectionId = e.target.dataset.id;
-                // Use the updateSection method you already built in formStore!
                 formStore.updateSection(sectionId, { title: e.target.value });
-            });
+            };
         });
 
         // Add Question
         container.querySelectorAll('.add-question-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 formStore.addQuestion(e.target.dataset.sectionId, 'text');
-            });
+            };
         });
 
-        // Delete Section (Added this missing listener for the delete button)
+        // Delete Section
         container.querySelectorAll('.delete-section-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 if (confirm('Delete this entire section?')) {
                     formStore.removeSection(e.target.dataset.sectionId);
                 }
-            });
+            };
         });
     }
 }

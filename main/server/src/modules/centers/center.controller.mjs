@@ -64,3 +64,12 @@ export const updateSettings = async (req, res, next) => {
         next(error);
     }
 };
+
+export const deleteCenter = async (req, res, next) => {
+    try {
+        await centerService.deleteCenter(req.params.id);
+        return successResponse(res, 200, 'Center deleted successfully');
+    } catch(error) {
+        next(error);
+    }
+};

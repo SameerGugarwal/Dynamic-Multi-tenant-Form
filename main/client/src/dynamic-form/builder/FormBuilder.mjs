@@ -1,6 +1,7 @@
 import { formStore } from '../state/formStore.mjs';
 import { FormRenderer } from '../renderer/FormRenderer.mjs';
 import { SectionBuilder } from './SectionBuilder.mjs';
+import morphdom from 'morphdom';
 
 export class FormBuilder {
     constructor(container) {
@@ -9,13 +10,23 @@ export class FormBuilder {
     }
 
     async mount() {
-        // Subscribe to state changes to re-render
-        this.unsubscribe = formStore.subscribe((state) => {
-            this.render(state);
-        });
-
-        // Initial render
         this.render(formStore.getState());
+
+        this.unsubscribe = formStore.subscribe((state) => {
+            const temp = document.createElement('div');
+            temp.innerHTML = this.getHtmlString(state);
+            
+            morphdom(this.container.firstElementChild, temp.firstElementChild, {
+                onBeforeElUpdated: function(fromEl, toEl) {
+                    // Prevent morphing the actively focused element so we don't lose the cursor mid-typing
+                    if (document.activeElement === fromEl) {
+                        return false; 
+                    }
+                    return true;
+                }
+            });
+            this.initListeners(state);
+        });
     }
 
     unmount() {
@@ -26,7 +37,14 @@ export class FormBuilder {
     }
 
     render(state) {
-        this.container.innerHTML = `
+        if (!this.container.firstElementChild) {
+            this.container.innerHTML = this.getHtmlString(state);
+        }
+        this.initListeners(state);
+    }
+
+    getHtmlString(state) {
+        return `
             <div class="max-w-5xl mx-auto pb-32 animate-fade-in ">
                 <!-- Header Actions -->
                 <div class="flex justify-between items-center mb-8 pb-4 border-b border-surface-200">
@@ -38,7 +56,7 @@ export class FormBuilder {
                         <button id="preview-schema-btn" class="border border-surface-200 bg-surface-50 text-slate-700 px-6 py-2.5 font-medium text-sm rounded-lg hover:bg-surface-100 transition-colors shadow-sm">
                             Preview Engine
                         </button>
-                        <button id="save-schema-btn" class="bg-brand-700 text-white px-8 py-2.5 font-medium text-sm rounded-lg hover:bg-brand-800 transition-colors shadow-sm">
+                        <button id="save-schema-btn" class="${formStore.isDirty ? '' : 'hidden'} bg-brand-700 text-white px-8 py-2.5 font-medium text-sm rounded-lg hover:bg-brand-800 transition-colors shadow-sm">
                             Save Schema
                         </button>
                     </div>
@@ -75,8 +93,6 @@ export class FormBuilder {
                 </div>
             </div>
         `;
-
-        this.initListeners(state);
     }
 
     initListeners(state) {
@@ -93,23 +109,24 @@ export class FormBuilder {
             formStore.updateMetadata(titleInput.value, descInput.value);
         };
         
-        titleInput.addEventListener('change', handleMetaChange);
-        descInput.addEventListener('change', handleMetaChange);
+        // Use onchange to prevent double-attaching listeners
+        titleInput.onchange = handleMetaChange;
+        descInput.onchange = handleMetaChange;
 
         // 2. Add Section
         const addSecBtn = this.container.querySelector('#add-section-btn');
-        addSecBtn.addEventListener('click', () => {
+        addSecBtn.onclick = () => {
             formStore.addSection();
-        });
+        };
 
         // 3. Save Payload
-        this.container.querySelector('#save-schema-btn').addEventListener('click', async () => {
+        this.container.querySelector('#save-schema-btn').onclick = async () => {
             const payload = formStore.getState();
             this.container.dispatchEvent(new CustomEvent('schema-saved', { detail: payload }));
-        });
+        };
 
         // 4. Preview Engine
-        this.container.querySelector('#preview-schema-btn').addEventListener('click', () => {
+        this.container.querySelector('#preview-schema-btn').onclick = () => {
             const payload = formStore.getState();
             
             const overlay = document.createElement('div');
@@ -137,6 +154,6 @@ export class FormBuilder {
             overlay.querySelector('#close-preview-btn').addEventListener('click', () => {
                 document.body.removeChild(overlay);
             });
-        });
+        };
     }
 }

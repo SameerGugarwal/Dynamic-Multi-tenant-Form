@@ -8,7 +8,7 @@ export class QuestionBuilder {
             <div class="border border-surface-200 bg-white rounded-xl p-6 relative group mb-4 shadow-sm">
                 <div class="flex justify-between items-start mb-4">
                     <div class="flex-1 mr-4">
-                        <div class="text-xs font-medium text-brand-700 bg-brand-50 px-2 py-0.5 rounded inline-block mb-2 select-all cursor-copy" title="Copy this ID for visibility rules">ID: ${question.id}</div>
+                        <div class="question-id-badge text-xs font-medium text-brand-700 bg-brand-50 px-2 py-0.5 rounded inline-block mb-2 cursor-pointer hover:bg-slate-200 transition-colors" data-question-id="${question.id}" title="Click to copy this ID for visibility rules">ID: ${question.id}</div>
                         <input 
                             type="text"
                             class="question-text-input w-full text-lg font-semibold text-slate-800 focus:outline-none border-b border-transparent focus:border-surface-300 pb-1 bg-transparent"
@@ -58,18 +58,32 @@ export class QuestionBuilder {
         if (OptionBuilder && OptionBuilder.attachListeners) OptionBuilder.attachListeners(container);
         if (RuleBuilder && RuleBuilder.attachListeners) RuleBuilder.attachListeners(container);
 
+        // Click-to-copy Question ID badge. `.onclick` is idempotent, so re-attaching
+        // after every morphdom re-render never stacks duplicate handlers.
+        container.querySelectorAll('.question-id-badge').forEach(badge => {
+            badge.onclick = () => {
+                const id = badge.dataset.questionId;
+                // navigator.clipboard is only available in secure contexts (HTTPS / localhost).
+                if (!navigator.clipboard || !navigator.clipboard.writeText) return;
+                navigator.clipboard.writeText(id).then(() => {
+                    badge.textContent = 'Copied!';
+                    setTimeout(() => { badge.textContent = `ID: ${id}`; }, 1500);
+                }).catch(() => {});
+            };
+        });
+
         // Update Text
         container.querySelectorAll('.question-text-input').forEach(input => {
-            input.addEventListener('blur', (e) => {
+            input.onblur = (e) => {
                 formStore.updateQuestion(e.target.dataset.sectionId, e.target.dataset.questionId, {
                     text: e.target.value
                 });
-            });
+            };
         });
 
         // Update Type (WITH FAIL-SAFE)
         container.querySelectorAll('.question-type-select').forEach(select => {
-            select.addEventListener('change', (e) => {
+            select.onchange = (e) => {
                 const newType = e.target.value;
                 const needsOptions = ['radio', 'checkbox', 'dropdown'].includes(newType);
                 
@@ -88,25 +102,25 @@ export class QuestionBuilder {
                 }
                 
                 formStore.updateQuestion(e.target.dataset.sectionId, e.target.dataset.questionId, updates);
-            });
+            };
         });
 
         // Delete Question
         container.querySelectorAll('.remove-question-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 // closest('button') protects against clicking the inner SVG
                 const button = e.target.closest('button');
                 formStore.removeQuestion(button.dataset.sectionId, button.dataset.questionId);
-            });
+            };
         });
 
         // Toggle Required
         container.querySelectorAll('.question-required-toggle').forEach(toggle => {
-            toggle.addEventListener('change', (e) => {
+            toggle.onchange = (e) => {
                 formStore.updateQuestion(e.target.dataset.sectionId, e.target.dataset.questionId, {
                     required: e.target.checked
                 });
-            });
+            };
         });
     }
 }

@@ -40,17 +40,17 @@ export class OptionBuilder {
 
     static attachListeners(container) {
         container.querySelectorAll('.add-option-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 const sId = e.target.dataset.sectionId;
                 const qId = e.target.dataset.questionId;
                 const question = formStore.getState().sections.find(s => s.id === sId).questions.find(q => q.id === qId);
                 const opts = question.options || [];
                 formStore.updateQuestion(sId, qId, { options: [...opts, `Option ${opts.length + 1}`] });
-            });
+            };
         });
 
         container.querySelectorAll('.remove-option-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 const sId = e.target.dataset.sectionId;
                 const qId = e.target.dataset.questionId;
                 const idx = parseInt(e.target.dataset.optionIndex);
@@ -58,11 +58,11 @@ export class OptionBuilder {
                 const opts = [...question.options];
                 opts.splice(idx, 1);
                 formStore.updateQuestion(sId, qId, { options: opts });
-            });
+            };
         });
 
         container.querySelectorAll('.option-input').forEach(input => {
-            input.addEventListener('change', (e) => {
+            input.onchange = (e) => {
                 const sId = e.target.dataset.sectionId;
                 const qId = e.target.dataset.questionId;
                 const idx = parseInt(e.target.dataset.optionIndex);
@@ -70,7 +70,7 @@ export class OptionBuilder {
                 const opts = [...question.options];
                 opts[idx] = e.target.value;
                 formStore.updateQuestion(sId, qId, { options: opts });
-            });
+            };
         });
     }
 }

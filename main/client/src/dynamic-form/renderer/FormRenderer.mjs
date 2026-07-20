@@ -217,17 +217,28 @@ export class FormRenderer {
     }
 
     applyVisibility() {
-        // Toggle DOM nodes
+        // Toggle question DOM nodes
         const questions = this.container.querySelectorAll('.form-question');
         questions.forEach(qNode => {
             const id = qNode.dataset.questionId;
             const isVisible = this.visibilityMap.questions[id];
-            
+
             if (isVisible) {
                 qNode.classList.remove('hidden');
             } else {
                 qNode.classList.add('hidden');
             }
+        });
+
+        // Reactive section visibility: hide a section wrapper when none of its
+        // questions are visible, so we don't leave an empty titled gap. Driven by
+        // the computed visibilityMap (not DOM classes) and only toggles the `hidden`
+        // class — the section node is never removed from the DOM.
+        this.schema.sections.forEach(section => {
+            const hasVisibleQuestion = section.questions.some(q => this.visibilityMap.questions[q.id]);
+            const secNode = this.container.querySelector(`.form-section[data-section-id="${section.id}"]`);
+            if (!secNode) return;
+            secNode.classList.toggle('hidden', !hasVisibleQuestion);
         });
     }
 

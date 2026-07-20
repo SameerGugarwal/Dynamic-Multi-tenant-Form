@@ -28,3 +28,11 @@ export const getOrganizationInfo = async (orgId) => {
     const userCount = await User.countDocuments({ organizationId: orgId });
     return { ...org.toObject(), userCount };
 };
+
+export const deleteOrganizationsByCenterId = async (centerId) => {
+    return await Organization.deleteMany({ centers: centerId });
+};
+
+export const deleteOrganizationById = async (orgId) => {
+    return await Organization.findByIdAndDelete(orgId);
+};

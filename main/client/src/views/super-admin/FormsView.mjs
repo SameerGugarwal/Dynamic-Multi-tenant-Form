@@ -6,6 +6,7 @@ import { Toast } from '../../components/toast/Toast.mjs';
 import { FormBuilder } from '../../dynamic-form/builder/FormBuilder.mjs';
 import { formStore } from '../../dynamic-form/state/formStore.mjs';
 import { FormRenderer } from '../../dynamic-form/renderer/FormRenderer.mjs';
+import Swal from 'sweetalert2';
 
 export default class FormsView {
     constructor(match) {
@@ -44,8 +45,41 @@ export default class FormsView {
 
         // Close builder container
         this.container.querySelector('#close-builder-btn').addEventListener('click', () => {
-            this.container.querySelector('#builder-container').classList.add('hidden');
-            this.loadMasterForms(); // Reload to reflect any potential builder changes
+            const closeBuilder = () => {
+                formStore.isDirty = false;
+                this.container.querySelector('#builder-container').classList.add('hidden');
+                this.loadMasterForms(); // Reload to reflect any potential builder changes
+            };
+
+            if (formStore.isDirty) {
+                Swal.fire({
+                    title: 'Unsaved Changes',
+                    text: 'You have unsaved changes. What would you like to do?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Save Changes',
+                    denyButtonText: 'Discard',
+                    cancelButtonText: 'Keep Editing',
+                    confirmButtonColor: '#2357b1',
+                    denyButtonColor: '#ef4444'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const updatedSchema = formStore.getState();
+                        try {
+                            await FormService.updateForm(updatedSchema._id, updatedSchema);
+                            Toast.success('Form Schema Saved!');
+                            closeBuilder();
+                        } catch (e) {
+                            Toast.error('Failed to save schema');
+                        }
+                    } else if (result.isDenied) {
+                        closeBuilder();
+                    }
+                });
+            } else {
+                closeBuilder();
+            }
         });
 
         await this.loadMasterForms();
@@ -89,7 +123,7 @@ export default class FormsView {
                 const isPublic = f.visibility === 'PUBLIC';
                 return {
                     id: f._id || f.id || 'N/A',
-                    title: `<button class="preview-btn font-bold font-medium text-brand-500 hover:text-brand-700 underline transition-colors" data-id="${f._id}" data-title="${f.title}">${f.title}</button>`,
+                    title: `<button class="preview-btn font-bold font-medium text-brand-500 hover:text-brand-700 transition-colors" data-id="${f._id}" data-title="${f.title}">${f.title}</button>`,
                     visibility: `
                         <select class="visibility-toggle text-xs font-bold p-1 border border-surface-200 rounded-xl shadow-sm ${isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" data-id="${f._id}">
                             <option value="PRIVATE" ${!isPublic ? 'selected' : ''}>PRIVATE</option>
@@ -181,6 +215,7 @@ export default class FormsView {
                             try {
                                 await FormService.updateForm(formId, updatedSchema);
                                 Toast.success('Form Schema Saved!');
+                                formStore.isDirty = false; // Reset dirty flag after saving
                             } catch (e) {
                                 Toast.error('Failed to save schema');
                             }

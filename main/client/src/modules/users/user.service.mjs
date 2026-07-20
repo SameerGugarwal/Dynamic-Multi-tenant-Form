@@ -52,5 +52,17 @@ export const UserService = {
             console.error('UserService.updateUser Error:', error);
             throw error;
         }
+    },
+
+    /**
+     * Delete a user
+     */
+    async deleteUser(userId) {
+        try {
+            return await http.delete(`/users/${userId}`);
+        } catch (error) {
+            console.error('UserService.deleteUser Error:', error);
+            throw error;
+        }
     }
 };

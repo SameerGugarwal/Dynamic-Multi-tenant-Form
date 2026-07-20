@@ -1,6 +1,7 @@
 //org. ko initialize karo 
 
 import * as orgRepo from './organization.repository.mjs';
+import * as userRepo from '../users/user.repository.mjs';
 import { AppError } from '../../shared/utils/errors.mjs';
 
 export const createOrganization = async (orgData) => {
@@ -23,4 +24,9 @@ export const updateOrganization = async (orgId, updateData) => {
 
 export const getOrganizationInfo = async (orgId) => {
     return await orgRepo.getOrganizationInfo(orgId);
+};
+
+export const deleteOrganization = async (orgId) => {
+    await userRepo.deleteUsersByOrganizationId(orgId);
+    return await orgRepo.deleteOrganizationById(orgId);
 };

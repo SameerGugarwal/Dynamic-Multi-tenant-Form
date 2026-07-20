@@ -3,6 +3,7 @@ import { Modal } from '../../components/modal/Modal.mjs';
 import { CenterService } from '../../modules/centers/center.service.mjs';
 import { Toast } from '../../components/toast/Toast.mjs';
 import http from '../../services/http.mjs';
+import Swal from 'sweetalert2';
 
 export default class CentersView {
     constructor(match) {
@@ -90,12 +91,15 @@ export default class CentersView {
             
             const rows = this.centers.map(center => ({
                 id: center.id || center._id || 'N/A',
-                name: `<button class="view-orgs-btn font-bold font-medium text-brand-500 hover:text-brand-700 underline transition-colors" data-id="${center._id}" data-name="${center.name}">${center.name}</button>`,
+                name: `<button class="view-orgs-btn font-bold font-medium text-brand-500 hover:text-brand-700  transition-colors" data-id="${center._id}" data-name="${center.name}">${center.name}</button>`,
                 location: center.location || 'Unknown',
                 status: center.isActive !== false
                     ? '<span class="text-green-600 font-bold uppercase text-xs tracking-widest">ACTIVE</span>' 
                     : '<span class="text-surface-400 font-bold uppercase text-xs tracking-widest">INACTIVE</span>',
-                actions: `<button class="edit-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-brand-500 transition-colors" data-id="${center._id}" data-name="${center.name}" data-active="${center.isActive !== false}">EDIT</button>`
+                actions: `
+                    <button class="edit-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-brand-500 transition-colors mr-3" data-id="${center._id}" data-name="${center.name}" data-active="${center.isActive !== false}">EDIT</button>
+                    <button class="delete-btn text-xs font-medium tracking-wide text-red-600 border-b border-red-600 hover:text-red-800 transition-colors" data-id="${center._id}" data-name="${center.name}">DELETE</button>
+                `
             }));
 
             // Re-render the Table
@@ -140,8 +144,44 @@ export default class CentersView {
                             Toast.error('Failed to update center');
                         }
                     });
-                    
                     editModal.open();
+                });
+            });
+
+            // Bind Delete Modal
+            this.container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.target.dataset.id;
+                    const name = e.target.dataset.name;
+                    
+                    const { value: confirmText } = await Swal.fire({
+                        title: 'Are you absolutely sure?',
+                        html: `Warning: This will permanently delete the Center <b>${name}</b> and ALL Organizations and Users inside it.<br><br>Type 'DELETE' to confirm.`,
+                        icon: 'warning',
+                        input: 'text',
+                        inputValidator: (value) => {
+                            if (value !== 'DELETE') {
+                                return 'You must type DELETE to confirm!';
+                            }
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, Delete Everything',
+                        confirmButtonColor: '#ef4444',
+                        customClass: {
+                            container: 'z-[9999]'
+                        }
+                    });
+
+                    if (confirmText === 'DELETE') {
+                        try {
+                            await CenterService.deleteCenter(id);
+                            Toast.success('Center and all nested entities deleted successfully.');
+                            this.loadData();
+                        } catch (err) {
+                            Toast.error('Failed to delete center.');
+                            console.error(err);
+                        }
+                    }
                 });
             });
 

@@ -1,5 +1,6 @@
-
 import http from '../../services/http.mjs';
+import { router } from '../../router/router.mjs';
+import { ROUTES } from '../../constants/routes.mjs';
 
 export default class DashboardView {
     async mount(container) {
@@ -45,19 +46,30 @@ export default class DashboardView {
             const data = (res.data) ? res.data : (res || { centers: 0, orgs: 0, forms: 0, submissions: 0 });
             
             this.container.querySelector('#stats-grid').innerHTML = `
-                <div class="border border-surface-200 rounded-xl shadow-sm bg-white p-6 shadow-sm">
+                <div data-route="${ROUTES.ORG_USERS}" class="metric-card border border-surface-200 rounded-xl shadow-sm bg-white p-6 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                     <div class="text-[10px] font-medium tracking-wide text-slate-500 mb-2">ORG USERS</div>
                     <div class="text-5xl font-heading font-semibold text-brand-600">${data.users || 0}</div>
                 </div>
-                <div class="border border-surface-200 rounded-xl shadow-sm bg-white p-6 shadow-sm">
+                <div data-route="${ROUTES.ORG_FORMS}" class="metric-card border border-surface-200 rounded-xl shadow-sm bg-white p-6 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                     <div class="text-[10px] font-medium tracking-wide text-slate-500 mb-2">ASSIGNED FORMS</div>
                     <div class="text-5xl font-heading font-semibold text-brand-600">${data.forms || 0}</div>
                 </div>
-                <div class="border border-surface-200 rounded-xl shadow-sm bg-white p-6 shadow-sm">
+                <div data-route="${ROUTES.ORG_REPORTS}" class="metric-card border border-surface-200 rounded-xl shadow-sm bg-white p-6 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                     <div class="text-[10px] font-medium tracking-wide text-slate-500 mb-2">SUBMISSIONS</div>
                     <div class="text-5xl font-heading font-semibold text-red-600">${data.submissions || 0}</div>
                 </div>
             `;
+
+            // Attach routing event listeners
+            const cards = this.container.querySelectorAll('.metric-card');
+            cards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const route = e.currentTarget.dataset.route;
+                    if (route) {
+                        router.navigate(route);
+                    }
+                });
+            });
 
             // Fetch Assigned Forms
             const assignedRes = await FormService.getAssignedForms();

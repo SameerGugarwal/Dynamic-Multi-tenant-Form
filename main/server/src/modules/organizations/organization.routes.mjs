@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNewOrg, getOrg, getAllOrgs, getCenterOrgs, updateOrganization, getOrganizationInfo } from './organization.controller.mjs';
+import { createNewOrg, getOrg, getAllOrgs, getCenterOrgs, updateOrganization, getOrganizationInfo, deleteOrganization } from './organization.controller.mjs';
 import { protect } from '../../middleware/auth.middleware.mjs';
 import { authorizeRoles } from '../../middleware/role.middleware.mjs';
 
@@ -78,6 +78,7 @@ router.get('/my-center', authorizeRoles('Center Admin'), getOrg, getCenterOrgs);
 router.get('/', authorizeRoles('Super Admin'), getAllOrgs);
 
 router.patch('/:id', authorizeRoles('Super Admin', 'Center Admin'), updateOrganization);
+router.delete('/:id', authorizeRoles('Super Admin'), deleteOrganization);
 router.get('/:id/info', authorizeRoles('Super Admin', 'Center Admin'), getOrganizationInfo);
 
 export default router;

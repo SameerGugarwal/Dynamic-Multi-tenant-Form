@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCenter, getCenter, updateCenter, getSettings, updateSettings } from './center.controller.mjs';
+import { createCenter, getCenter, updateCenter, getSettings, updateSettings, deleteCenter } from './center.controller.mjs';
 import { protect } from '../../middleware/auth.middleware.mjs';
 import { authorizeRoles } from '../../middleware/role.middleware.mjs';
 
@@ -85,6 +85,7 @@ router.get('/', authorizeRoles('Super Admin'), getCenter);
  *         description: Center updated successfully
  */
 router.patch('/:id', authorizeRoles('Super Admin'), updateCenter);
+router.delete('/:id', authorizeRoles('Super Admin'), deleteCenter);
 
 // Center Admin Settings routes
 router.get('/settings/profile', authorizeRoles('Center Admin'), getSettings);

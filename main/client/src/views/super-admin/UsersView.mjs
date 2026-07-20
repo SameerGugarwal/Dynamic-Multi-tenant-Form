@@ -3,6 +3,7 @@ import { Toast } from '../../components/toast/Toast.mjs';
 import http from '../../services/http.mjs';
 import { UserService } from '../../modules/users/user.service.mjs';
 import { TokenService } from '../../services/token.service.mjs';
+import Swal from 'sweetalert2';
 
 export default class UsersView {
     constructor(match) {
@@ -142,7 +143,8 @@ export default class UsersView {
                         </button>
                     `,
                     actions: `
-                        <button class="reset-pwd-btn text-xs font-semibold text-brand-500 font-medium border-b-2 border-brand-500 hover:text-brand-700 hover:border-brand-700 transition-colors" data-id="${u._id}">RESET PWD</button>
+                        <button class="reset-pwd-btn text-xs font-semibold text-brand-500 font-medium border-b-2 border-brand-500 hover:text-brand-700 hover:border-brand-700 transition-colors mr-3" data-id="${u._id}">RESET PWD</button>
+                        <button class="delete-btn text-xs font-semibold text-red-600 font-medium border-b-2 border-red-600 hover:text-red-800 transition-colors" data-id="${u._id}" data-name="${u.name}" ${isCurrentUser ? 'disabled title="You cannot delete yourself"' : ''}>DELETE</button>
                     `
                 };
             });
@@ -228,6 +230,43 @@ export default class UsersView {
                         Toast.success("Password has been successfully reset!");
                     } catch (err) {
                         Toast.error(err.message || 'Failed to reset password');
+                    }
+                });
+            });
+
+            // Bind Delete Modal
+            this.container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.target.dataset.id;
+                    const name = e.target.dataset.name;
+                    
+                    const { value: confirmText } = await Swal.fire({
+                        title: 'Are you absolutely sure?',
+                        html: `Warning: This will permanently delete the user <b>${name}</b>.<br><br>Type 'DELETE' to confirm.`,
+                        icon: 'warning',
+                        input: 'text',
+                        inputValidator: (value) => {
+                            if (value !== 'DELETE') {
+                                return 'You must type DELETE to confirm!';
+                            }
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, Delete User',
+                        confirmButtonColor: '#ef4444',
+                        customClass: {
+                            container: 'z-[9999]'
+                        }
+                    });
+
+                    if (confirmText === 'DELETE') {
+                        try {
+                            await UserService.deleteUser(id);
+                            Toast.success('User deleted successfully.');
+                            this.loadData();
+                        } catch (err) {
+                            Toast.error('Failed to delete user.');
+                            console.error(err);
+                        }
                     }
                 });
             });

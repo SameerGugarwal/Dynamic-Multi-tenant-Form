@@ -3,12 +3,17 @@ import { Modal } from '../../components/modal/Modal.mjs';
 import { OrganizationService } from '../../modules/organizations/organization.service.mjs';
 import { CenterService } from '../../modules/centers/center.service.mjs';
 import { Toast } from '../../components/toast/Toast.mjs';
+import Swal from 'sweetalert2';
 
 export default class OrganizationsView {
     constructor(match) {
         this.match = match;
         this.orgs = [];
         this.centers = [];
+        // Per-modal-session flag for the "unlockable" center checkbox state machine.
+        // Reset to false each time the Edit modal opens; flips to true once the user
+        // clears their selection, after which the full center list stays visible.
+        this.isCenterListUnlocked = false;
     }
 
     async mount(container) {
@@ -36,10 +41,14 @@ export default class OrganizationsView {
         // Create Org Submit
         this.container.querySelector('#new-org-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const selectedCenter = document.getElementById('no-center').value;
+
+            // Centers <-> Orgs is many-to-many: a center may belong to multiple orgs,
+            // so no conflict/exclusivity check is needed on assignment.
             const payload = {
                 name: document.getElementById('no-name').value,
                 contactEmail: document.getElementById('no-email').value,
-                centers: [document.getElementById('no-center').value]
+                centers: [selectedCenter]
             };
             try {
                 await OrganizationService.createOrganization(payload);
@@ -116,12 +125,15 @@ export default class OrganizationsView {
 
                 return {
                     id: org.id || org._id || 'N/A',
-                    name: `<button class="view-info-btn font-bold font-medium text-brand-500 hover:text-brand-700 underline transition-colors" data-id="${org._id}">${org.name}</button>`,
+                    name: `<button class="view-info-btn font-bold font-medium text-brand-500 hover:text-brand-700  transition-colors" data-id="${org._id}">${org.name}</button>`,
                     center: centerText,
                     status: org.isActive !== false
                         ? '<span class="text-green-600 font-bold uppercase text-xs tracking-widest">ACTIVE</span>' 
                         : '<span class="text-red-600 font-bold uppercase text-xs tracking-widest">INACTIVE</span>',
-                    actions: `<button class="edit-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-brand-500 transition-colors" data-id="${org._id}" data-name="${org.name}" data-email="${org.contactEmail || ''}" data-active="${org.isActive !== false}" data-centers="${assignedCentersIds}">MANAGE</button>`
+                    actions: `
+                        <button class="edit-btn text-xs font-medium tracking-wide border-b border-surface-200 hover:text-brand-500 transition-colors mr-3" data-id="${org._id}" data-name="${org.name}" data-email="${org.contactEmail || ''}" data-active="${org.isActive !== false}" data-centers="${assignedCentersIds}">MANAGE</button>
+                        <button class="delete-btn text-xs font-medium tracking-wide text-red-600 border-b border-red-600 hover:text-red-800 transition-colors" data-id="${org._id}" data-name="${org.name}">DELETE</button>
+                    `
                 };
             });
 
@@ -137,16 +149,6 @@ export default class OrganizationsView {
                     const isActive = e.target.dataset.active === 'true';
                     const assignedCentersIds = e.target.dataset.centers ? e.target.dataset.centers.split(',') : [];
                     
-                    // Generate dynamic checkboxes for centers inside the modal body
-                    const checkboxesHTML = this.centers.map(c => `
-                        <label class="flex items-center space-x-2 cursor-pointer mb-2">
-                            <input type="checkbox" name="ec-center-checkbox" value="${c._id || c.id}" 
-                                class="w-4 h-4 text-brand-600 border border-surface-200 rounded-xl shadow-sm rounded-none focus:ring-brand-500"
-                                ${assignedCentersIds.includes(c._id || c.id) ? 'checked' : ''}>
-                            <span class="text-xs font-bold font-medium">${c.name}</span>
-                        </label>
-                    `).join('');
-
                     const bodyHTML = `
                         <div class="space-y-4">
                             <div>
@@ -160,7 +162,6 @@ export default class OrganizationsView {
                             <div>
                                 <label class="text-xs font-bold block mb-1">Assigned Centers</label>
                                 <div id="ec-centers-container" class="border border-surface-200 rounded-xl shadow-sm p-3 h-32 overflow-y-auto bg-white">
-                                    ${checkboxesHTML}
                                 </div>
                             </div>
                             <div>
@@ -175,6 +176,8 @@ export default class OrganizationsView {
 
                     const editModal = new Modal('EDIT ORG', bodyHTML, async () => {
                         const selectedCenters = Array.from(document.querySelectorAll('input[name="ec-center-checkbox"]:checked')).map(cb => cb.value);
+
+                        // Centers <-> Orgs is many-to-many, so no conflict/exclusivity check on save.
                         const payload = {
                             name: document.getElementById('ec-name').value,
                             contactEmail: document.getElementById('ec-email').value,
@@ -190,8 +193,125 @@ export default class OrganizationsView {
                             Toast.error('Failed to update organization');
                         }
                     });
-                    
                     editModal.open();
+
+                    // ---- "Unlockable" center checkbox state machine ----
+                    // Reset the lock for every fresh modal session.
+                    this.isCenterListUnlocked = false;
+
+                    const containerElement = document.getElementById('ec-centers-container');
+
+                    // Set of centers owned by OTHER orgs (used to filter in Safe Mode).
+                    // Many-to-many is allowed at the data level; this hiding is purely a
+                    // safety UX guard so the admin doesn't casually touch another org's centers.
+                    const otherOrgCenterIds = new Set();
+                    this.orgs.forEach(o => {
+                        if (String(o._id || o.id) === String(id)) return; // skip the org being edited
+                        (o.centers || []).forEach(c => otherOrgCenterIds.add(String(c._id || c.id || c)));
+                    });
+
+                    // Renders the checkbox list according to the current lock state.
+                    // - Locked (State 1, Safe Mode): this org's centers + unassigned centers only.
+                    // - Unlocked (State 3, Free Select): every center in the database.
+                    const renderCenterCheckboxes = (checkedIds) => {
+                        if (!containerElement) return;
+                        const checkedSet = new Set((checkedIds || []).map(String));
+
+                        const visibleCenters = this.isCenterListUnlocked
+                            ? this.centers
+                            : this.centers.filter(c => !otherOrgCenterIds.has(String(c._id || c.id)));
+
+                        containerElement.innerHTML = ''; // Safely clear the targeted container
+
+                        if (visibleCenters.length === 0) {
+                            const empty = document.createElement('p');
+                            empty.className = 'text-xs text-slate-400';
+                            empty.textContent = 'No centers available.';
+                            containerElement.appendChild(empty);
+                            return;
+                        }
+
+                        visibleCenters.forEach(c => {
+                            const cId = String(c._id || c.id);
+
+                            const label = document.createElement('label');
+                            label.className = 'flex items-center gap-2 cursor-pointer mb-2 px-2 py-1.5 rounded-lg hover:bg-surface-50 transition-colors';
+
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.name = 'ec-center-checkbox';
+                            input.value = cId;
+                            input.className = 'w-4 h-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500/50';
+                            if (checkedSet.has(cId)) input.checked = true;
+
+                            const span = document.createElement('span');
+                            span.className = 'text-sm text-slate-700';
+                            span.textContent = c.name; // XSS-safe `.textContent` rendering
+
+                            label.appendChild(input);
+                            label.appendChild(span);
+                            containerElement.appendChild(label);
+                        });
+                    };
+
+                    if (containerElement) {
+                        // State 1: initial render, filtered, pre-checking this org's centers.
+                        renderCenterCheckboxes(assignedCentersIds);
+
+                        // Single delegated listener drives the State 2 / State 3 transitions.
+                        containerElement.addEventListener('change', (event) => {
+                            if (event.target.name !== 'ec-center-checkbox') return;
+
+                            // State 3: once unlocked, never re-filter/re-render, so checking a
+                            // box in the full list can't hide the other unselected options.
+                            if (this.isCenterListUnlocked) return;
+
+                            const checkedCount = containerElement.querySelectorAll('input[name="ec-center-checkbox"]:checked').length;
+
+                            // State 2: user cleared everything -> unlock and reveal ALL centers.
+                            if (checkedCount === 0) {
+                                this.isCenterListUnlocked = true;
+                                renderCenterCheckboxes([]);
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Bind Delete Modal
+            this.container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.target.dataset.id;
+                    const name = e.target.dataset.name;
+                    
+                    const { value: confirmText } = await Swal.fire({
+                        title: 'Are you absolutely sure?',
+                        html: `Warning: This will permanently delete the Organization <b>${name}</b> and ALL Users assigned to it.<br><br>Type 'DELETE' to confirm.`,
+                        icon: 'warning',
+                        input: 'text',
+                        inputValidator: (value) => {
+                            if (value !== 'DELETE') {
+                                return 'You must type DELETE to confirm!';
+                            }
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, Delete Organization',
+                        confirmButtonColor: '#ef4444',
+                        customClass: {
+                            container: 'z-[9999]'
+                        }
+                    });
+
+                    if (confirmText === 'DELETE') {
+                        try {
+                            await OrganizationService.deleteOrganization(id);
+                            Toast.success('Organization and its users deleted successfully.');
+                            this.loadData();
+                        } catch (err) {
+                            Toast.error('Failed to delete organization.');
+                            console.error(err);
+                        }
+                    }
                 });
             });
 

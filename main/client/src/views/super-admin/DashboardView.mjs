@@ -1,5 +1,7 @@
 import { http } from '../../services/http.mjs';
 import { Toast } from '../../components/toast/Toast.mjs';
+import { router } from '../../router/router.mjs';
+import { ROUTES } from '../../constants/routes.mjs';
 
 export default class DashboardView {
     async mount(container) {
@@ -78,15 +80,26 @@ export default class DashboardView {
         const grid = this.container.querySelector('#stats-grid');
         // injecting the interactive hover cards
         grid.innerHTML = `
-            ${this.createMetricCard('Centers',stats.centers || 0, 'bg-white', 'text-slate-800')}
-            ${this.createMetricCard('Organizations', stats.orgs || 0, 'bg-surface-50', 'text-brand-700')}
-            ${this.createMetricCard('Master Forms', stats.forms || 0, 'bg-white', 'text-slate-800')}
-            ${this.createMetricCard('Submissions', stats.submissions || 0, 'bg-brand-700', 'text-white')}
+            ${this.createMetricCard('Centers', stats.centers || 0, 'bg-white', 'text-slate-800', ROUTES.SUPER_ADMIN_CENTERS)}
+            ${this.createMetricCard('Organizations', stats.orgs || 0, 'bg-surface-50', 'text-brand-700', ROUTES.SUPER_ADMIN_ORGS)}
+            ${this.createMetricCard('Master Forms', stats.forms || 0, 'bg-white', 'text-slate-800', ROUTES.SUPER_ADMIN_FORMS)}
+            ${this.createMetricCard('Submissions', stats.submissions || 0, 'bg-brand-700', 'text-white', ROUTES.SUPER_ADMIN_REPORTS)}
         `;
+
+        // Attach routing event listeners
+        const cards = grid.querySelectorAll('.metric-card');
+        cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                const route = e.currentTarget.dataset.route;
+                if (route) {
+                    router.navigate(route);
+                }
+            });
+        });
     }
-    createMetricCard( title, value, bgClass, textClass){
+    createMetricCard(title, value, bgClass, textClass, routePath){
         return`
-            <div class="${bgClass} border border-surface-200 rounded-xl shadow-sm p-6 hover:shadow-md transition-all cursor-default">
+            <div data-route="${routePath}" class="metric-card ${bgClass} border border-surface-200 rounded-xl shadow-sm p-6 hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer">
                 <p class="${textClass} text-sm font-medium opacity-80 mb-2">
                     ${title}
                 </p>

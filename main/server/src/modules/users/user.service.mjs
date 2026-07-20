@@ -79,3 +79,7 @@ export const updateUser = async (userId, updateData) => {
 export const getAllUsers = async () => {
     return await userRepo.findAllUsers();
 };
+
+export const deleteUser = async (userId) => {
+    return await userRepo.deleteUserById(userId);
+};

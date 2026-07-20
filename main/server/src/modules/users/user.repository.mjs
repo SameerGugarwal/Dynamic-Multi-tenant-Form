@@ -27,3 +27,15 @@ export const updateUserById = async (userId, updateData) => {
 export const findAllUsers = async () => {
     return await User.find({}).populate('role', 'name').populate('organizationId', 'name').populate('centerId', 'name').select('-passwordHash');
 };
+
+export const deleteUserById = async (userId) => {
+    return await User.findByIdAndDelete(userId);
+};
+
+export const deleteUsersByCenterId = async (centerId) => {
+    return await User.deleteMany({ centerId });
+};
+
+export const deleteUsersByOrganizationId = async (orgId) => {
+    return await User.deleteMany({ organizationId: orgId });
+};

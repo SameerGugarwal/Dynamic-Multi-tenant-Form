@@ -81,3 +81,12 @@ export const adminResetPassword = async (req, res, next) => {
         next(error);
     }
 };
+
+export const deleteUserController = async (req, res, next) => {
+    try {
+        await userService.deleteUser(req.params.id);
+        return successResponse(res, 200, 'User deleted successfully');
+    } catch(error) {
+        next(error);
+    }
+};
